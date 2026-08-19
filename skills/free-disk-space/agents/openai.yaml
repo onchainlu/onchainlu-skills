@@ -1,0 +1,4 @@
+interface:
+  display_name: "Free Disk Space"
+  short_description: "Reclaim safe, regenerable macOS storage"
+  default_prompt: "Use $free-disk-space to investigate disk use and reclaim only safe, regenerable storage."

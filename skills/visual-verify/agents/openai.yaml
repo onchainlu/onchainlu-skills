@@ -1,0 +1,4 @@
+interface:
+  display_name: "Visual Verify"
+  short_description: "Verify UI changes on rendered surfaces"
+  default_prompt: "Use $visual-verify to inspect the rendered UI at the relevant viewports before calling it done."

@@ -15,6 +15,15 @@ repeat. Handle whichever is blocking; usually that's both.
 
 No feature work. No drive-bys.
 
+## GitHub authentication
+
+Before asking the user to log in again, run `gh auth status -h github.com`. If
+that check ran without network access or inside a restricted sandbox, repeat
+the same read-only check in a network-capable context and treat that result as
+authoritative. Never print token values. Request login only once and only when
+the authoritative check fails; report missing administrative scope separately
+from authentication failure.
+
 ## Rebase + CI
 
 1. Find the worktree for this PR (or create one per repo convention). Prefer an

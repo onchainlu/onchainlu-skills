@@ -1,0 +1,4 @@
+interface:
+  display_name: "AgentCash"
+  short_description: "Use paid APIs through AgentCash"
+  default_prompt: "Use $agentcash to call the appropriate paid API for this task."

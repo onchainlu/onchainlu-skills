@@ -20,9 +20,12 @@ Reuse what the app already has. Don't invent a parallel UI kit.
    already do it.
 3. Prefer a **variant** on an existing primitive over a new component.
 4. Colors/spacing/type from **existing CSS vars / tokens** (including the
-   app's Tailwind v4 setup). No one-off hex/shadow stacks.
+   app's Tailwind v4 setup). Use shared spacing tokens for equal component
+   padding and outer gutters. No one-off hex/shadow stacks.
 5. Match the app's look: if the app doesn't use borders/shadows/sparkles,
    neither does your feature.
+6. Keep content inside the relevant viewport. Check wrapping and overflow
+   before adding local width or padding exceptions.
 
 ## Don't
 
@@ -41,8 +44,9 @@ before inventing anything.
 1. Pull the design context (Figma MCP if available, else the screenshot/mock).
 2. Map it to existing primitives and tokens before building anything new.
 3. Layout and structure first, then content.
-4. Match spacing, padding, contrast, and states exactly. Check the details —
-   no white-on-white, no doubled padding, correct CTA contrast.
+4. Match spacing, padding, outer gutters, contrast, and states exactly. Check
+   the details — no white-on-white, no doubled padding, no viewport clipping,
+   and correct CTA contrast.
 5. Optimize exported assets (SVGO for SVGs).
 6. Don't approximate spacing or colors the design specifies, and don't add
    chrome neither the design nor the app has.

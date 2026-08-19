@@ -14,6 +14,15 @@ when the work is done and the branch should end up as a PR someone can read.
 Run the two skills for real — this file is the sequence, not a replacement for
 their contents.
 
+## GitHub authentication
+
+Before asking the user to log in again, run `gh auth status -h github.com`. If
+that check ran without network access or inside a restricted sandbox, repeat
+the same read-only check in a network-capable context and treat that result as
+authoritative. Never print token values. Request login only once and only when
+the authoritative check fails; report missing administrative scope separately
+from authentication failure.
+
 ## Steps
 
 1. **Clean** (`clean`). Re-read the diff, cut dead code and debug logging,

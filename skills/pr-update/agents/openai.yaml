@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Update"
+  short_description: "Open or refresh an accurate PR"
+  default_prompt: "Use $pr-update to open or refresh a PR that matches the full current diff."

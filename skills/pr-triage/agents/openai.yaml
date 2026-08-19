@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Triage"
+  short_description: "Triage external PRs for maintainers"
+  default_prompt: "Use $pr-triage to assess these external PRs and recommend the maintainer action."

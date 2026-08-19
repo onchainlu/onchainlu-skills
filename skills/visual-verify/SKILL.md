@@ -15,11 +15,14 @@ passing test. Look at the running surface.
 
 1. Run the actual surface (dev server, app, TUI/GUI, Storybook — whatever shows
    this UI). Don't start one the user already has running.
-2. Capture what it looks like — screenshot it, or tell the user exactly how to
-   see it.
+2. Capture the current viewport. For responsive web or desktop layouts, also
+   render one relevant narrow viewport and capture it. If the environment
+   cannot resize, state that limitation and do not claim narrow rendered
+   verification.
 3. Compare against the reference: the design (Figma/mock), the sibling surface it
    should match, or the before state. Name the specific things you checked
-   (color values, spacing, border, active state, contrast).
+   (color values, equal component padding, outer gutters, control heights,
+   wrapping, horizontal overflow, viewport clipping, active state, contrast).
 4. If it doesn't match, keep the debug logging and iterate. Only say "done" once
    it visibly matches.
 
@@ -29,3 +32,5 @@ passing test. Look at the running surface.
   the rendered value.
 - Delete instrumentation while the visual is still wrong.
 - Trust unit tests as proof a UI renders correctly.
+- Treat a CSS media rule alone as proof that the narrow layout renders
+  correctly.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Notarize Mac"
+  short_description: "Build and verify notarized macOS releases"
+  default_prompt: "Use $notarize-mac to build and verify the project's notarized macOS release."

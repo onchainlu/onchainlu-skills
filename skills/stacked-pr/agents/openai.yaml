@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stacked PR"
+  short_description: "Manage dependent and multi-base PRs"
+  default_prompt: "Use $stacked-pr to update this dependent or multi-base PR set safely."

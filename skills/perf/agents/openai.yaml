@@ -1,0 +1,4 @@
+interface:
+  display_name: "Performance"
+  short_description: "Profile, fix, and remeasure slow paths"
+  default_prompt: "Use $perf to baseline, profile, and improve the real hot path."

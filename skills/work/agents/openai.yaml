@@ -1,0 +1,4 @@
+interface:
+  display_name: "Worktree"
+  short_description: "Start isolated work in a git worktree"
+  default_prompt: "Use $work to start this task in a dedicated git worktree."
