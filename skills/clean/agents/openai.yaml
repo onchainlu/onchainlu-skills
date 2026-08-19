@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clean"
+  short_description: "Polish a diff with focused cleanup"
+  default_prompt: "Use $clean to polish the current diff with a focused cleanup pass."

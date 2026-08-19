@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare 1:1"
+  short_description: "Prepare an evidence-based 1:1 update"
+  default_prompt: "Use $prep-1on1 to prepare my next one-on-one update."

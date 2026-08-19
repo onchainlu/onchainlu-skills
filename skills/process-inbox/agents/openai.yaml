@@ -1,0 +1,4 @@
+interface:
+  display_name: "Process Vault Inbox"
+  short_description: "Sharpen and file inbox captures"
+  default_prompt: "Use $process-inbox to process my vault inbox."

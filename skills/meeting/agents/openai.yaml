@@ -1,0 +1,4 @@
+interface:
+  display_name: "Process Meeting"
+  short_description: "File a meeting transcript and insights"
+  default_prompt: "Use $meeting to process this meeting transcript into my vault."

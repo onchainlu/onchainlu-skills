@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vault Connections"
+  short_description: "Find non-obvious links across notes"
+  default_prompt: "Use $connections to find this week’s strongest vault connections."

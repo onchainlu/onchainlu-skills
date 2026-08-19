@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Smells Review"
+  short_description: "Review and fix changed code safely"
+  default_prompt: "Use $smells to review and fix issues in the current diff."

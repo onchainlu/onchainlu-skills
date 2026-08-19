@@ -1,0 +1,4 @@
+interface:
+  display_name: "Capture to Vault"
+  short_description: "Capture a note in the vault inbox"
+  default_prompt: "Use $capture to save this thought to my vault inbox."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Weekly Synthesis"
+  short_description: "Find a thesis across recent notes"
+  default_prompt: "Use $synthesis to create this week’s vault synthesis."

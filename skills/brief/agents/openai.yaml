@@ -1,0 +1,4 @@
+interface:
+  display_name: "Daily Brief"
+  short_description: "Create a daily vault reflection"
+  default_prompt: "Use $brief to create today’s daily vault brief."
