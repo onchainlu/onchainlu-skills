@@ -35,7 +35,7 @@ The bootstrap script creates missing Claude Code links and configures Hermes whe
 
 ## Hermes Cloud
 
-Hermes supports private GitHub repositories as skill taps. The Cloud environment must provide `GITHUB_TOKEN` with read-only Contents access to `onchainlu/onchainlu-skills`. Keep that token in the platform's secret store; never commit it or paste it into a prompt.
+Hermes supports private GitHub repositories as skill taps. The Cloud environment must have read access to `onchainlu/onchainlu-skills` through its GitHub App, an authenticated `gh` CLI, or `GITHUB_TOKEN`/`GH_TOKEN`. If a token is required, use a fine-grained token with read-only Contents access and keep it in the platform's secret store. Never commit it or paste it into a prompt.
 
 From a checkout of this repository inside the Cloud environment, run:
 

@@ -9,7 +9,7 @@ description: >-
 
 # No Tropes (AI writing tells)
 
-After drafting any prose, revise it against the tropes catalog in [tropes-reference.md](tropes-reference.md).
+After drafting any prose, revise it against the tropes catalog in [references/tropes-reference.md](references/tropes-reference.md).
 
 ## Core Principle
 

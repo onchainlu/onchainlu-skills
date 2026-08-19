@@ -18,7 +18,7 @@ push). Use `gh` or `glab`.
 
 Batch ("we will be reviewing…") or a pasted Discord/`>>>…<<<` thread with a PR:
 
-1. Figure out repo + forge. Skim `AGENTS.md` / `CONTRIBUTING.md` if present.
+1. Figure out repo + forge. Skim its agent and contributor instructions if present.
 2. Match this repo's worktree/branch naming by inspecting existing worktrees.
 3. Don't touch the primary checkout — use worktrees.
 4. **Cluster the batch first** (below), then verdict + salvage plan; wait for go
@@ -169,7 +169,7 @@ This is the default salvage ritual — not a rare escalation.
 6. Close the cluster (below).
 7. Run `no-tropes` on public comments.
 
-Templates: [reference.md](reference.md).
+Templates: [references/reference.md](references/reference.md).
 
 ## Close the cluster
 

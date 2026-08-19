@@ -41,8 +41,8 @@ Exhaust what the project already states before searching the web.
 - Tickets and specs: the tracker issue, the PRD or spec, QA feedback, the Slack
   or Discord thread that started it — whatever this project treats as the
   record.
-- The repo's own planning docs: `plans/`, `docs/`, ADRs, `AGENTS.md`,
-  `CONTEXT.md`, README.
+- The repo's own planning docs, architecture decisions, agent guidance, context
+  documents, and README.
 - Figma dev mode when the question is visual. The design is the source of truth
   (→ `ui-system`).
 - The repo itself: `git log -S<symbol>` and `git log -p` for why the code got
