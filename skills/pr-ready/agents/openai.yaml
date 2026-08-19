@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Ready"
+  short_description: "Clear CI and review blockers from a PR"
+  default_prompt: "Use $pr-ready to make the current PR mergeable without expanding its scope."

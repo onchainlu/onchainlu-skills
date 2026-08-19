@@ -1,0 +1,4 @@
+interface:
+  display_name: "CPR"
+  short_description: "Clean a diff and open or refresh its PR"
+  default_prompt: "Use $cpr to clean the current diff and publish an accurate PR."

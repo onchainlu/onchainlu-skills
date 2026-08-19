@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI System"
+  short_description: "Reuse established UI primitives and tokens"
+  default_prompt: "Use $ui-system to implement this UI with the existing primitives, tokens, and patterns."

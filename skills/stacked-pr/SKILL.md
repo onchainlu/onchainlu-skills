@@ -8,6 +8,15 @@ description: >-
 
 # Stacked & Multi-base PRs
 
+## GitHub authentication
+
+Before asking the user to log in again, run `gh auth status -h github.com`. If
+that check ran without network access or inside a restricted sandbox, repeat
+the same read-only check in a network-capable context and treat that result as
+authoritative. Never print token values. Request login only once and only when
+the authoritative check fails; report missing administrative scope separately
+from authentication failure.
+
 ## Stacked (dependent) PRs
 
 A child PR builds on a parent PR's branch. Update the stack bottom-up:

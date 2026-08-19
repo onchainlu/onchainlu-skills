@@ -26,6 +26,10 @@ Don't start a dev server the user already has running — assume it's up unless
 told otherwise. Keep debug logging in place while something's still broken;
 remove it only once it works.
 
+Treat short feedback such as "remove this", "this feels uneven", or "same for
+the other view" as an update to the active UI scope. Preserve earlier accepted
+details and standing constraints unless the user explicitly replaces them.
+
 ## Do this instead
 
 1. Change the UI.

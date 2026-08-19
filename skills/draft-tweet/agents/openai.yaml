@@ -1,0 +1,4 @@
+interface:
+  display_name: "Draft Tweet"
+  short_description: "Draft concise posts about shipped work"
+  default_prompt: "Use $draft-tweet to draft a few concise posts about this shipped work."

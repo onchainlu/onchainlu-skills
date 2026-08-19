@@ -1,0 +1,4 @@
+interface:
+  display_name: "No Tropes"
+  short_description: "Remove common AI writing patterns"
+  default_prompt: "Use $no-tropes to revise this prose into direct natural language."

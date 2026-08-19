@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ticket Ship"
+  short_description: "Take a tracker ticket through PR handoff"
+  default_prompt: "Use $ticket-ship to take this assigned ticket through a mergeable PR and tracker handoff."

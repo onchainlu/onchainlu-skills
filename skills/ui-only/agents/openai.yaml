@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI Only"
+  short_description: "Iterate on UI before final checks"
+  default_prompt: "Use $ui-only to iterate on this interface until the rendered result is approved."

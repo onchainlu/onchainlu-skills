@@ -1,0 +1,4 @@
+interface:
+  display_name: "Audit Only"
+  short_description: "Investigate and report without changes"
+  default_prompt: "Use $audit-only to investigate this request and report findings without making changes."

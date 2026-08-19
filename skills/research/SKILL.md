@@ -29,10 +29,12 @@ Match the shape of the ask:
 | medium | "how do people do this", choosing an approach | 3-6 sources, compare, recommend |
 | very thorough | architecture, redesign, "this has to be solved somewhere" | survey the field, name the canon, ROI-ordered options |
 
-Fan out with parallel subagents for breadth. Give each one a scope, a
-`Thoroughness:` level, `Do not edit files.`, and a return contract: exact paths
-with line numbers and short quotes for code, or URL, technique, license, and
-applicability for outside repos.
+Use subagents only when the host permits them and the user or applicable
+instructions authorize delegation. When authorized, give each subagent a
+bounded scope, a `Thoroughness:` level, `Do not edit files.`, and a return
+contract: exact paths with line numbers and short quotes for code, or URL,
+technique, license, and applicability for outside repositories. Otherwise use
+tool-level parallelism or research serially.
 
 ## Documents of record first
 
@@ -76,6 +78,16 @@ Rank the sources and mark which tier a claim sits in:
 
 Every non-obvious claim carries a URL. With no URL, write "unverified" rather
 than stating it flat.
+
+For architecture explanations, interview preparation, audits, and decisions,
+keep a compact evidence ledger:
+
+- **Verified:** directly supported by source code, records, or primary sources.
+- **Inferred:** a conclusion drawn from verified facts; label the inference.
+- **Missing:** evidence that would be needed to make a stronger claim.
+
+When the user needs an interview-safe explanation, describe automation and
+system behavior only to the degree demonstrated by the evidence.
 
 ## Don't
 
