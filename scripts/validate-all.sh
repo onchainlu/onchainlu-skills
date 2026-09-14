@@ -12,8 +12,9 @@ tmp_dir=$(mktemp -d)
 trap 'rm -rf "$tmp_dir"' EXIT HUP INT TERM
 
 python3 "$repo_root/scripts/test-validate-skills.py"
+python3 "$repo_root/scripts/test-functional-test-env.py"
 python3 "$repo_root/scripts/validate-skills.py"
-python3 -m pytest -q -p no:cacheprovider \
+python3 "$repo_root/scripts/run-functional-tests.py" \
   "$repo_root/skills/pdf/tests/test_pdf_skill.py" \
   "$repo_root/skills/xlsx/tests/test_xlsx_skill.py"
 

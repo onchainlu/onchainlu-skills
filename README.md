@@ -68,21 +68,18 @@ Edit the canonical files under `~/.agents/skills`, review the diff, validate the
 Run the complete repository check before publishing:
 
 ```bash
-venv_dir="${TMPDIR:-/tmp}/onchainlu-skills-ci-venv"
-python3 -m venv "$venv_dir"
-. "$venv_dir/bin/activate"
-python -m pip install --require-hashes -r requirements-ci.txt
 ./scripts/validate-all.sh
 ```
 
-Keep the test environment outside the checkout because recursive public-content
-validation intentionally scans every repository file.
+The validation command creates a temporary virtual environment outside the
+checkout, installs the hash-locked dependencies from `requirements-ci.txt`, and
+removes the environment on exit. Dependency installation and downloads use
+finite timeouts and retries; failures stop validation with a nonzero status.
 
 The check validates skill frontmatter, OpenAI metadata, local references,
 shell scripts, trigger ownership, secret patterns, and public-repository path
 boundaries, then runs the PDF and XLSX functional suites. GitHub Actions invokes
-the same validation command on pushes and pull requests; install the pinned
-requirements above before running it in a fresh environment.
+the same self-contained validation command on pushes and pull requests.
 
 ## License and provenance
 
