@@ -1,4 +1,0 @@
-interface:
-  display_name: "Baoyu Infographic"
-  short_description: "Infographics: 21 layouts x 21 styles (信息图, 可视化)."
-  default_prompt: "Use $baoyu-infographic to baoyu-infographic."
