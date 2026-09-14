@@ -56,8 +56,9 @@ while IFS= read -r shell_script; do
 done <"$shell_list"
 
 git -C "$repo_root" diff --check
-if [ "${CI:-}" = true ] && [ -n "${GITHUB_BASE_REF:-}" ]; then
-  git -C "$repo_root" diff --check "origin/${GITHUB_BASE_REF}...HEAD"
+if [ "${CI:-}" = true ]; then
+  empty_tree=$(git -C "$repo_root" hash-object -t tree /dev/null)
+  git -C "$repo_root" diff --check "$empty_tree" HEAD
 fi
 
 printf 'Repository validation passed.\n'
