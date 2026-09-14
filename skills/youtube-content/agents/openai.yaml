@@ -1,4 +1,0 @@
-interface:
-  display_name: "Youtube Content"
-  short_description: "YouTube transcripts to summaries, threads, blogs."
-  default_prompt: "Use $youtube-content to youtube-content."
