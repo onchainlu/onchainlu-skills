@@ -42,7 +42,7 @@ functionality is covered by the `nearby` command below, with the same
 
 Python 3.8+ (stdlib only — no pip installs needed).
 
-Script path: `~/.hermes/skills/productivity/maps/scripts/maps_client.py` (or `/opt/data/skills/productivity/maps/scripts/maps_client.py` in hosted Hermes).
+Script path: `~/.hermes/skills/productivity/maps/scripts/maps_client.py` (or the installed Hermes skill path in the active environment).
 
 ## Commands
 

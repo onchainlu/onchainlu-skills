@@ -110,14 +110,14 @@ After this, the agent can use any command below without further setup. OAuth 2.0
 
 > **Common pitfall:** If you omit `--app my-app` from `xurl auth oauth2`, the OAuth token is saved to the built-in `default` app profile — which has no client-id or client-secret. Commands will fail with auth errors even though the OAuth flow appeared to succeed. If you hit this, re-run `xurl auth oauth2 --app my-app` and `xurl auth default my-app`.
 
-> **Docker HOME pitfall:** In the official Hermes Docker layout, `/opt/data` is `HERMES_HOME`, but Hermes tool subprocesses use `/opt/data/home` as `HOME`. That means `~/.xurl` resolves to `/opt/data/home/.xurl` for Hermes-run `xurl` commands, not `/opt/data/.xurl`. Run the user setup with the same HOME:
+> **Docker HOME pitfall:** Hermes tool subprocesses may use a different `HOME` from your interactive shell. Run setup and status checks with the same `HOME` that the Hermes subprocess uses:
 > ```bash
-> HOME=/opt/data/home xurl auth apps add my-app --client-id YOUR_CLIENT_ID --client-secret YOUR_CLIENT_SECRET
-> HOME=/opt/data/home xurl auth oauth2 --app my-app YOUR_USERNAME
-> HOME=/opt/data/home xurl auth default my-app YOUR_USERNAME
-> HOME=/opt/data/home xurl auth status
+> HOME="$HOME" xurl auth apps add my-app --client-id YOUR_CLIENT_ID --client-secret YOUR_CLIENT_SECRET
+> HOME="$HOME" xurl auth oauth2 --app my-app YOUR_USERNAME
+> HOME="$HOME" xurl auth default my-app YOUR_USERNAME
+> HOME="$HOME" xurl auth status
 > ```
-> If `HOME=/opt/data xurl auth status` succeeds but `HOME=/opt/data/home xurl auth status` shows no apps or tokens, Hermes tool calls will not see the credentials.
+> If interactive and Hermes-run checks resolve different `HOME` directories, configure credentials in the directory used by the Hermes subprocess. Never read or expose the token store.
 
 ---
 
@@ -419,7 +419,7 @@ xurl --app staging /2/users/me             # one-off against staging
 - **Token refresh:** OAuth 2.0 tokens auto-refresh. Nothing to do.
 - **Multiple apps:** Each app has isolated credentials/tokens. Switch with `xurl auth default` or `--app`.
 - **Multiple accounts per app:** Select with `-u / --username`, or set a default with `xurl auth default APP USER`.
-- **Token storage:** `~/.xurl` is YAML. In Docker, use the Hermes subprocess HOME (`/opt/data/home` in the official image) so tokens land under `/opt/data/home/.xurl`. Never read or send this file to LLM context.
+- **Token storage:** `~/.xurl` is YAML. Configure it under the `HOME` used by the Hermes subprocess so tokens resolve to `$HOME/.xurl`. Never read or send this file to LLM context.
 - **Cost:** X API access is typically paid for meaningful usage. Many failures are plan/permission problems, not code problems.
 
 ---

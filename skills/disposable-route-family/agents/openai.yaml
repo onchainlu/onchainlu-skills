@@ -1,4 +1,0 @@
-interface:
-  display_name: "Disposable Route Family"
-  short_description: "Disposable audit fixture; verified route is authoritative."
-  default_prompt: "Use $disposable-route-family to disposable-route-family."

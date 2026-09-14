@@ -129,7 +129,7 @@ When the skill needs a capability, name the proper Hermes tool in backticks: `te
 
 ### Never use machine-local paths
 
-Write repo-relative paths (`skills/...`, `tools/skill_manager_tool.py`). A `/home/<you>/...` path baked into a committed skill breaks for every other user and is an instant review flag.
+Write repo-relative paths (`skills/...`, `tools/skill_manager_tool.py`). A machine-specific home-directory path baked into a committed skill breaks for other users and is an instant review flag.
 
 ## Writing Quality Principles
 
