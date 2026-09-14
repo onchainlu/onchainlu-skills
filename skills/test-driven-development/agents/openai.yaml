@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Driven Development"
+  short_description: "TDD: enforce RED-GREEN-REFACTOR, tests before code."
+  default_prompt: "Use $test-driven-development to test-driven-development."

@@ -68,3 +68,11 @@ The upstream repository did not declare a license when this notice was
 prepared. The root MIT license does not grant rights to the upstream AgentCash
 material. AgentCash names, services, and trademarks remain the property of
 their respective owners.
+
+## Hermes global skill snapshot
+
+The inspection PR imports the 81 non-overlapping global skill directories from the sanitized Hermes snapshot at `/opt/data/artifacts/hermes-github-backup-current`, preserving each skill's source files and adding repository-required OpenAI interface metadata. Platform-specific/profile-only/duplicate/runtime material is excluded.
+
+## Hermes global skill snapshot
+
+This inspection PR imports 81 non-overlapping global skill directories from the sanitized Hermes snapshot at `/opt/data/artifacts/hermes-github-backup-current`. Each imported directory preserves its source files and adds repository-required OpenAI interface metadata. Profile-only, duplicate, runtime, secret-bearing, and nonportable candidates are excluded.

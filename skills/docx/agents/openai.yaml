@@ -1,0 +1,4 @@
+interface:
+  display_name: "Docx"
+  short_description: "Create, read, edit, template, and review Word .docx files."
+  default_prompt: "Use $docx to docx."

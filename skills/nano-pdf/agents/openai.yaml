@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nano Pdf"
+  short_description: "Edit text in existing PDFs via natural-language prompts."
+  default_prompt: "Use $nano-pdf to nano-pdf."

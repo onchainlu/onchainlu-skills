@@ -1,0 +1,4 @@
+interface:
+  display_name: "Llama Cpp"
+  short_description: "llama.cpp local GGUF inference + HF Hub model discovery."
+  default_prompt: "Use $llama-cpp to llama-cpp."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Node Inspect Debugger"
+  short_description: "Debug Node.js via --inspect + Chrome DevTools Protocol CLI."
+  default_prompt: "Use $node-inspect-debugger to node-inspect-debugger."

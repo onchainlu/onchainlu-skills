@@ -1,0 +1,4 @@
+interface:
+  display_name: "Box"
+  short_description: "Box manages cloud files, sharing, search, and metadata."
+  default_prompt: "Use $box to box."

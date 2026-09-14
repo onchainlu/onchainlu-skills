@@ -1,0 +1,4 @@
+interface:
+  display_name: "Weekly Review Planning"
+  short_description: "Weekly reset: commitments, stalled work, next-week plan."
+  default_prompt: "Use $weekly-review-planning to weekly-review-planning."

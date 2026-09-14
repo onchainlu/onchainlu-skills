@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pdf"
+  short_description: "Create, read, merge, fill, and secure PDF files."
+  default_prompt: "Use $pdf to pdf."

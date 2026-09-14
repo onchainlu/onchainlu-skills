@@ -1,0 +1,4 @@
+interface:
+  display_name: "Github Auth"
+  short_description: "GitHub auth setup: HTTPS tokens, SSH keys, gh CLI login."
+  default_prompt: "Use $github-auth to authenticate safely."

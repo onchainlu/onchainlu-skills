@@ -1,0 +1,4 @@
+interface:
+  display_name: "Humanizer"
+  short_description: "Humanize text: strip AI-isms and add real voice."
+  default_prompt: "Use $humanizer to humanizer."

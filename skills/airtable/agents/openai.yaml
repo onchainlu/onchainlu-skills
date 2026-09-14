@@ -1,0 +1,4 @@
+interface:
+  display_name: "Airtable"
+  short_description: "Airtable REST API via curl. Records CRUD, filters, upserts."
+  default_prompt: "Use $airtable to airtable."

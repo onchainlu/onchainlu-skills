@@ -1,0 +1,4 @@
+interface:
+  display_name: "Notion"
+  short_description: "Notion API + ntn CLI: pages, databases, markdown, Workers."
+  default_prompt: "Use $notion to notion."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Findmy"
+  short_description: "Track Apple devices/AirTags via FindMy.app on macOS."
+  default_prompt: "Use $findmy to findmy."

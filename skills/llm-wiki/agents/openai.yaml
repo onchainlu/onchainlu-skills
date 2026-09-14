@@ -1,0 +1,4 @@
+interface:
+  display_name: "Llm Wiki"
+  short_description: "Karpathy's LLM Wiki: build/query interlinked markdown KB."
+  default_prompt: "Use $llm-wiki to llm-wiki."

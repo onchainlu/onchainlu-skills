@@ -1,0 +1,4 @@
+interface:
+  display_name: "Imessage"
+  short_description: "Send and receive iMessages/SMS via the imsg CLI on macOS."
+  default_prompt: "Use $imessage to imessage."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pretext"
+  short_description: "Build creative browser demos with DOM-free text layout."
+  default_prompt: "Use $pretext to pretext."

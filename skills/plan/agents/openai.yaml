@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan"
+  short_description: "Write a markdown plan to .hermes/plans/; no execution."
+  default_prompt: "Use $plan to plan."

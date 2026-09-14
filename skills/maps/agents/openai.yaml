@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maps"
+  short_description: "Geocode, POIs, routes, timezones via OpenStreetMap/OSRM."
+  default_prompt: "Use $maps to maps."

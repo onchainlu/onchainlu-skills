@@ -1,0 +1,4 @@
+interface:
+  display_name: "Systematic Debugging"
+  short_description: "4-phase root cause debugging: understand bugs before fixing."
+  default_prompt: "Use $systematic-debugging to systematic-debugging."

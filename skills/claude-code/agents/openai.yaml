@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claude Code"
+  short_description: "Delegate coding to Claude Code CLI (features, PRs)."
+  default_prompt: "Use $claude-code to claude-code."

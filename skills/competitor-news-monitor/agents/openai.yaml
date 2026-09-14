@@ -1,0 +1,4 @@
+interface:
+  display_name: "Competitor News Monitor"
+  short_description: "Watch named companies for material news; cited digests."
+  default_prompt: "Use $competitor-news-monitor to competitor-news-monitor."

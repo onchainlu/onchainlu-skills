@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Reminders"
+  short_description: "Apple Reminders via remindctl: add, list, complete."
+  default_prompt: "Use $apple-reminders to apple-reminders."

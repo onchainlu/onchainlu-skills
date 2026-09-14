@@ -1,0 +1,4 @@
+interface:
+  display_name: "Serving Llms Vllm"
+  short_description: "vLLM: high-throughput LLM serving, OpenAI API, quantization."
+  default_prompt: "Use $serving-llms-vllm to serving-llms-vllm."

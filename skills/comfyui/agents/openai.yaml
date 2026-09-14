@@ -1,0 +1,4 @@
+interface:
+  display_name: "Comfyui"
+  short_description: "Generate images, video, and audio via diffusion workflows."
+  default_prompt: "Use $comfyui to comfyui."

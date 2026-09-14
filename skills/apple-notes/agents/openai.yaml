@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Notes"
+  short_description: "Manage Apple Notes via memo CLI: create, search, edit."
+  default_prompt: "Use $apple-notes to apple-notes."

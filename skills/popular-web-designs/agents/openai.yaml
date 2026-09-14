@@ -1,0 +1,4 @@
+interface:
+  display_name: "Popular Web Designs"
+  short_description: "54 real design systems (Stripe, Linear, Vercel) as HTML/CSS."
+  default_prompt: "Use $popular-web-designs to popular-web-designs."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dogfood"
+  short_description: "Exploratory QA of web apps: find bugs, evidence, reports."
+  default_prompt: "Use $dogfood to dogfood."

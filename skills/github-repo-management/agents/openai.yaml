@@ -1,0 +1,4 @@
+interface:
+  display_name: "Github Repo Management"
+  short_description: "Clone/create/fork repos; manage remotes, releases."
+  default_prompt: "Use $github-repo-management to github-repo-management."

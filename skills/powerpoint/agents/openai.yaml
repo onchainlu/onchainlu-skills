@@ -1,0 +1,4 @@
+interface:
+  display_name: "Powerpoint"
+  short_description: "Create, read, edit .pptx decks with python-pptx."
+  default_prompt: "Use $powerpoint to powerpoint."

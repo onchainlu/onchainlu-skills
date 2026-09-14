@@ -1,0 +1,4 @@
+interface:
+  display_name: "Python Debugpy"
+  short_description: "Debug Python: pdb REPL + debugpy remote (DAP)."
+  default_prompt: "Use $python-debugpy to python-debugpy."

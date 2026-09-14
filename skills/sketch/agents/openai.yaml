@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sketch"
+  short_description: "Throwaway HTML mockups: 2-3 design variants to compare."
+  default_prompt: "Use $sketch to sketch."

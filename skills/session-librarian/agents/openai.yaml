@@ -1,0 +1,4 @@
+interface:
+  display_name: "Session Librarian"
+  short_description: "Organize sessions by prompt: find, rename, archive, prune."
+  default_prompt: "Use $session-librarian to session-librarian."

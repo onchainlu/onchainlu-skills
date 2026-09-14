@@ -1,0 +1,4 @@
+interface:
+  display_name: "Computer Use"
+  short_description: "Drive the desktop in the background without stealing focus."
+  default_prompt: "Use $computer-use to computer-use."

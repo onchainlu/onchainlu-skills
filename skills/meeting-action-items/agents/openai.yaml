@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meeting Action Items"
+  short_description: "Turn meeting notes into cited decisions, owners, tickets."
+  default_prompt: "Use $meeting-action-items to meeting-action-items."

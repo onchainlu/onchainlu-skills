@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manim Video"
+  short_description: "Manim CE animations: 3Blue1Brown math/algo videos."
+  default_prompt: "Use $manim-video to manim-video."

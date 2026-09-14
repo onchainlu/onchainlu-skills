@@ -1,0 +1,4 @@
+interface:
+  display_name: "Merge Reconciler"
+  short_description: "Neutral third-party resolution of agent merge conflicts."
+  default_prompt: "Use $merge-reconciler to merge-reconciler."

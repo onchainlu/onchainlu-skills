@@ -1,0 +1,4 @@
+interface:
+  display_name: "Inspecting Hermes Desktop Dom"
+  short_description: "Read the live Hermes desktop DOM/CSS over CDP."
+  default_prompt: "Use $inspecting-hermes-desktop-dom to inspecting-hermes-desktop-dom."
