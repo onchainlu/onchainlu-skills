@@ -1,4 +1,0 @@
-interface:
-  display_name: "Google Workspace"
-  short_description: "Gmail, Calendar, Drive, Docs, Sheets via gws CLI or Python."
-  default_prompt: "Use $google-workspace to google-workspace."

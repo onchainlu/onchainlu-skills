@@ -1,4 +1,0 @@
-interface:
-  display_name: "Github Issue To Pr"
-  short_description: "Carry a GitHub issue to a verified PR with honest CI state."
-  default_prompt: "Use $github-issue-to-pr to github-issue-to-pr."

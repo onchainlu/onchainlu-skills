@@ -1,4 +1,0 @@
-interface:
-  display_name: "Blogwatcher"
-  short_description: "Monitor blogs and RSS/Atom feeds via blogwatcher-cli tool."
-  default_prompt: "Use $blogwatcher to blogwatcher."

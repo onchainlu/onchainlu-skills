@@ -6,12 +6,12 @@ metadata:
   hermes:
     tags: [pdf, documents, forms, reportlab, pypdf, pdfplumber]
     category: productivity
-    related_skills: [docx, xlsx, powerpoint, ocr-and-documents]
+    related_skills: [xlsx]
 ---
 
 # PDF Skill
 
-Create PDFs from structured specs, build and fill AcroForm forms (with layout linting and visual overlays), extract text/tables/metadata, merge/split/rotate/watermark/stamp pages, export page images, manage metadata and attachments, and encrypt/decrypt — using pypdf, reportlab, and pdfplumber. Scanned (image-only) PDFs contain no text layer: OCR is explicitly out of scope here — when a page is image-only, stop and use the `ocr-and-documents` skill instead of pretending to extract text.
+Create PDFs from structured specs, build and fill AcroForm forms (with layout linting and visual overlays), extract text/tables/metadata, merge/split/rotate/watermark/stamp pages, export page images, manage metadata and attachments, and encrypt/decrypt — using pypdf, reportlab, and pdfplumber. Scanned (image-only) PDFs contain no text layer: OCR is explicitly out of scope here — when a page is image-only, stop and use an approved OCR tool instead of pretending to extract text.
 
 ## When to Use
 
@@ -21,7 +21,7 @@ Create PDFs from structured specs, build and fill AcroForm forms (with layout li
 - Merge, split, rotate, extract page subsets, watermark, stamp text/images at coordinates, bookmark, or compress PDFs.
 - Export pages as PNGs for visual review or for OCR hand-off; set/clear document metadata; add/extract file attachments.
 - Fill or flatten AcroForm forms; encrypt or decrypt with passwords.
-- NOT for scanned/image-only PDFs (use `ocr-and-documents`) and NOT for pixel-perfect HTML-to-PDF rendering (use a headless browser).
+- NOT for scanned/image-only PDFs (use an approved OCR tool) and NOT for pixel-perfect HTML-to-PDF rendering (use a headless browser).
 
 ## Prerequisites
 
@@ -46,8 +46,8 @@ python scripts/pdf_read.py form.pdf --fields              # form fields: name, t
 python scripts/pdf_merge.py a.pdf b.pdf -o merged.pdf [--bookmarks]
 python scripts/pdf_split.py doc.pdf --pages 1-3,7 -o part.pdf [--rotate 90]
 python scripts/pdf_fill_form.py form.pdf --fields-json values.json -o filled.pdf [--flatten]
-python scripts/pdf_secure.py doc.pdf --encrypt -o enc.pdf --user-password your-password
-python scripts/pdf_secure.py enc.pdf --decrypt -o dec.pdf --password your-password
+python scripts/pdf_secure.py doc.pdf --encrypt -o enc.pdf --user-password '<non-secret-placeholder>'
+python scripts/pdf_secure.py enc.pdf --decrypt -o dec.pdf --password '<non-secret-placeholder>'
 python scripts/pdf_watermark.py doc.pdf --stamp mark.pdf -o stamped.pdf [--under]
 python scripts/pdf_stamp.py doc.pdf -o out.pdf --text "DRAFT" --x 150 --y 400 \
     --font-size 60 --rotation 45 --opacity 0.3 --color "#cc0000" [--pages 1-3]
@@ -80,7 +80,7 @@ python scripts/pdf_meta.py doc.pdf --list-attachments | --extract-attachments di
 
 ## Procedure
 
-1. **Inspect first.** Run `pdf_read.py file.pdf --meta`. Check `encrypted` (if true, decrypt first with `pdf_secure.py --decrypt`) and `likely_scanned_pages`. If pages are image-only, export them with `pdf_page_image.py --pages <scanned> --dpi 300 --out-dir imgs/` and hand the PNGs to the `ocr-and-documents` skill — do not report empty text as "no content".
+1. **Inspect first.** Run `pdf_read.py file.pdf --meta`. Check `encrypted` (if true, decrypt first with `pdf_secure.py --decrypt`) and `likely_scanned_pages`. If pages are image-only, export them with `pdf_page_image.py --pages <scanned> --dpi 300 --out-dir imgs/` and hand the PNGs to an approved OCR tool — do not report empty text as "no content".
 2. **Create.** Write a JSON spec with `write_file` (elements: `heading`, `paragraph`, `table`, `image`, `pagebreak`; optional `title`/`author` metadata; page numbers are added automatically), then run `pdf_create.py`. Verify visually with `vision_analyze` on a rendered page image if layout matters.
 3. **Extract.** `--text` gives a JSON list of per-page strings; `--tables` gives row arrays per page and can also emit CSV files. Read results with `read_file`; never eyeball a binary PDF directly.
 4. **Manipulate.** `pdf_merge.py` concatenates and can add one bookmark per source file; `pdf_split.py` handles page ranges (1-based, e.g. `1-3,5,9-`), rotation in 90° steps, and `--compress`. Watermark by preparing a single-page stamp PDF (e.g. via `pdf_create.py`) and overlaying it with `pdf_watermark.py`; for one-liner stamps ("sign here", diagonal DRAFT, corner labels) use `pdf_stamp.py` with text or an image at explicit coordinates.
@@ -92,12 +92,16 @@ python scripts/pdf_meta.py doc.pdf --list-attachments | --extract-attachments di
 
 ## Pitfalls
 
-- **Scanned PDFs**: empty `extract_text()` plus page images means there is no text layer. Route to `ocr-and-documents`; do not fabricate text.
+- **Scanned PDFs**: empty `extract_text()` plus page images means there is no text layer. Route to an approved OCR tool; do not fabricate text.
 - **Flattening limits**: `pdf_fill_form.py --flatten` uses pypdf's flatten support, which converts widget appearances into page content. It is reliable for plain text fields and checkboxes but can drop or misrender exotic widgets (rich text, custom appearance streams, some radio groups). Verify the flattened output visually with `vision_analyze`; for bulletproof flattening use an external renderer (e.g. Ghostscript or `pdftoppm`+reassembly) as a fallback.
 - **NeedAppearances**: after filling, viewers only render values if appearance streams exist. The fill script sets the AcroForm `NeedAppearances` flag so conforming viewers regenerate them; some minimal viewers ignore it — flatten if display fidelity matters.
 - **Non-Latin form values**: values are stored correctly (UTF-16), but the field's default font may lack glyphs, so a viewer can show blanks even though the data round-trips. Verify with `--fields`, not just visually.
 - **Compression expectations**: `--compress` only deflates content streams. Typical savings are 0–20%; it does nothing for PDFs dominated by images or already-compressed streams. It is not a substitute for image downsampling (Ghostscript territory).
 - **Permission flags don't enforce**: owner-password permission bits (no-print, no-copy) are polite requests that viewers may honor; any library (including pypdf) can read and strip them. Only the user password actually gates content via encryption. Never present permission flags as security.
+- **Password arguments are visible**: command-line passwords may appear in
+  shell history and process listings. Do not put a real secret in a command
+  unless the user explicitly accepts that exposure; prefer a protected input
+  channel or a disposable environment with history disabled.
 - **Table extraction is heuristic**: pdfplumber detects tables from ruling lines/word alignment; borderless or merged-cell tables may need `table_settings` tuning or manual cleanup.
 - **Page indexing**: helper CLIs take 1-based pages; pypdf APIs are 0-based. The scripts convert — don't double-convert.
 - **Rotated stamp text extraction**: pdfplumber's line grouping scrambles rotated glyphs (a 45° "DRAFT" extracts as stray letters); verify rotated stamps with `pypdf`'s `extract_text()` or a rendered image instead.

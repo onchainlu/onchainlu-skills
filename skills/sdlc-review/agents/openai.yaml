@@ -1,4 +1,0 @@
-interface:
-  display_name: "Sdlc Review"
-  short_description: "Review Kanban handoffs and route verified outcomes."
-  default_prompt: "Use $sdlc-review to sdlc-review."

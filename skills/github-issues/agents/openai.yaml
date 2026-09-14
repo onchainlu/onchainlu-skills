@@ -1,4 +1,0 @@
-interface:
-  display_name: "Github Issues"
-  short_description: "Create, triage, label, assign GitHub issues via gh or REST."
-  default_prompt: "Use $github-issues to github-issues."

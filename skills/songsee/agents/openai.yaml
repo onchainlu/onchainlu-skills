@@ -1,4 +1,0 @@
-interface:
-  display_name: "Songsee"
-  short_description: "Audio spectrograms/features (mel, chroma, MFCC) via CLI."
-  default_prompt: "Use $songsee to songsee."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Spike"
-  short_description: "Throwaway experiments to validate an idea before build."
-  default_prompt: "Use $spike to spike."

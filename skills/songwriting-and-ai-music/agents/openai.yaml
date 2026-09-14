@@ -1,4 +1,0 @@
-interface:
-  display_name: "Songwriting And Ai Music"
-  short_description: "Songwriting craft and Suno AI music prompts."
-  default_prompt: "Use $songwriting-and-ai-music to songwriting-and-ai-music."

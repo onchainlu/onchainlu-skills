@@ -1,4 +1,0 @@
-interface:
-  display_name: "Weights And Biases"
-  short_description: "W&B: log ML experiments, sweeps, model registry, dashboards."
-  default_prompt: "Use $weights-and-biases to weights-and-biases."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Email Inbox Triage"
-  short_description: "Triage an inbox: prioritize threads, draft replies safely."
-  default_prompt: "Use $email-inbox-triage to email-inbox-triage."

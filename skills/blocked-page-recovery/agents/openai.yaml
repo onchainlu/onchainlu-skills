@@ -1,4 +1,0 @@
-interface:
-  display_name: "Blocked Page Recovery"
-  short_description: "Recover blocked/paywalled/WAF'd pages via fallbacks."
-  default_prompt: "Use $blocked-page-recovery to blocked-page-recovery."

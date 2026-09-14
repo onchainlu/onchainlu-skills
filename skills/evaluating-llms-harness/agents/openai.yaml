@@ -1,4 +1,0 @@
-interface:
-  display_name: "Evaluating Llms Harness"
-  short_description: "lm-eval-harness: benchmark LLMs (MMLU, GSM8K, etc.)."
-  default_prompt: "Use $evaluating-llms-harness to evaluating-llms-harness."

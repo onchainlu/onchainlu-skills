@@ -1,4 +1,0 @@
-interface:
-  display_name: "Architecture Diagram"
-  short_description: "Dark-themed SVG architecture/cloud/infra diagrams as HTML."
-  default_prompt: "Use $architecture-diagram to architecture-diagram."

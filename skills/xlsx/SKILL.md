@@ -6,7 +6,7 @@ metadata:
   hermes:
     tags: [excel, spreadsheet, xlsx, csv, openpyxl, productivity]
     category: productivity
-    related_skills: [docx, pdf, powerpoint]
+    related_skills: [pdf]
 ---
 
 # Xlsx Skill
@@ -80,7 +80,7 @@ Author the JSON spec with `write_file`, inspect script JSON output with
 | Defined names | `--define-name "Rates='Data'!$B$2:$B$9"` / `--delete-name Rates` / `xlsx_read.py f.xlsx --names` |
 | Hyperlink | `--hyperlink "A1=https://example.com|Docs"` |
 | Cell note | `--note "B2=Check this|Reviewer"`; read via `xlsx_read.py f.xlsx --notes` |
-| Protect sheet (see Pitfalls) | `--protect your-password --unlock B2:B9` |
+| Protect sheet (see Pitfalls) | `--protect '<non-secret-placeholder>' --unlock B2:B9` |
 | Recalculate via LibreOffice | `xlsx_recalc.py f.xlsx` |
 | Copy / rename sheet | `--copy-sheet Src:New --rename-sheet Old:New` |
 | Force recalc on open | `xlsx_edit.py f.xlsx --recalc` |
@@ -119,8 +119,8 @@ Author the JSON spec with `write_file`, inspect script JSON output with
    when `soffice` is absent), then reload with `--data-only`.
 4. **Edit**: `xlsx_edit.py` applies renames/copies first, then
    structural row/column changes, then `--set`/`--append`. It edits in
-   place unless `--out` is given — copy the file first if you need the
-   original.
+   place unless `--out` is given. For an existing workbook, use `--out`
+   unless the user explicitly approves replacing the original.
 5. **Restructure**: for insert/delete on sheets that have formulas,
    merges, tables, or filters, use `xlsx_restructure.py` instead of
    `xlsx_edit.py`. It rewrites formula references on ALL sheets
@@ -164,6 +164,9 @@ LibreOffice or hand the file to the user unconverted.
   well-behaved apps and nothing more. Anyone can strip it by editing
   the zip's XML or unchecking it in LibreOffice. Never rely on it for
   confidentiality or integrity; it does not encrypt anything.
+- **Password arguments are visible.** `--protect` values may appear in shell
+  history and process listings. Use only a non-secret edit-deterrence value;
+  never reuse a credential or confidentiality password.
 - **`data_only=True` then save** silently discards all formulas
   (cached values replace them). Never save a workbook loaded that way
   unless that is the goal.

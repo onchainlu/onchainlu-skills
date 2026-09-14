@@ -1,4 +1,0 @@
-interface:
-  display_name: "Openhue"
-  short_description: "Control Philips Hue lights, scenes, rooms via OpenHue CLI."
-  default_prompt: "Use $openhue to openhue."

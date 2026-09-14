@@ -1,4 +1,0 @@
-interface:
-  display_name: "Teams Meeting Pipeline"
-  short_description: "Teams meeting summaries, job replay, Graph subscriptions."
-  default_prompt: "Use $teams-meeting-pipeline to teams-meeting-pipeline."

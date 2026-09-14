@@ -1,4 +1,0 @@
-interface:
-  display_name: "Product Price Monitor"
-  short_description: "Watch product, flight, or listing prices; alert on target."
-  default_prompt: "Use $product-price-monitor to product-price-monitor."

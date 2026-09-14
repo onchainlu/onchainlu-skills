@@ -5,12 +5,13 @@ license: MIT
 metadata:
   hermes:
     tags: [Weekly-Review, Planning, Tasks, Calendar, Productivity]
-    related_skills: [obsidian, notion, airtable, google-workspace, email-inbox-triage]
+    related_skills: []
 ---
 
 # Weekly Review and Planning
 
-Run a bounded weekly reset across the user's chosen systems. This is a concrete recurring task, not a generic productivity methodology — the `weekly-review` Automation Blueprint schedules it as a cron job.
+Run a bounded weekly reset across the user's chosen systems. This is a concrete
+recurring task; scheduling is optional and requires separate approval.
 
 ## When to Use
 
@@ -18,9 +19,9 @@ Run a bounded weekly reset across the user's chosen systems. This is a concrete 
 - "What did I commit to and what is slipping?"
 - "Plan next week from my calendar, tasks, and notes."
 - "Find stale projects and waiting items."
-- A cron tick fires for a scheduled weekly review.
+- An approved scheduler triggers a weekly review.
 
-Don't use for: daily briefs (see the `google-workspace` daily-brief reference) or single-inbox triage (`email-inbox-triage`).
+Don't use for: daily briefs or single-inbox triage.
 
 ## Procedure
 
@@ -30,11 +31,17 @@ Confirm timezone, review period, planning horizon, authoritative task/project st
 
 ### 2. Review calendar evidence
 
-Load `google-workspace` or the relevant calendar connector. Inspect the completed week for meetings and commitments, then the next 1-2 weeks for deadlines, travel, preparation, and capacity. Capture follow-ups implied by past events and conflicts ahead. Done when both retrospective and horizon are covered.
+Use the user's approved calendar reader. Inspect the completed week for meetings
+and commitments, then the next 1-2 weeks for deadlines, travel, preparation,
+and capacity. Capture follow-ups implied by past events and conflicts ahead.
+Done when both retrospective and horizon are covered.
 
 ### 3. Clear capture inboxes
 
-Review the task inbox, notes (`obsidian`, `notion`), flagged email (`email-inbox-triage` owns thread-level triage), and other declared capture points. Convert each item to next action, project, waiting, scheduled, someday, reference, archive, or delete proposal. Do not mutate until scope is approved. Done when remaining unprocessed items are counted and stated.
+Review the approved task, notes, email, and other declared capture sources.
+Convert each item to next action, project, waiting, scheduled, someday,
+reference, archive, or delete proposal. Do not mutate until scope is approved.
+Done when remaining unprocessed items are counted and stated.
 
 ### 4. Reconcile active projects
 

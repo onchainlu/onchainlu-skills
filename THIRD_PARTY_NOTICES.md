@@ -57,22 +57,44 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## AgentCash
+## Nous Research Hermes Agent
 
-`skills/agentcash/SKILL.md` comes from
-[Merit-Systems/agentcash-skills](https://github.com/Merit-Systems/agentcash-skills)
-and matches the published skill identified at revision
-`522d5da81af61e955e228d8dbb0499e0fb85171a`.
+The following skill directories are adapted from
+[NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) at
+revision `4d9202b9633fa8e5d8e47b8cb9e07ff3cd92636b`:
 
-The upstream repository did not declare a license when this notice was
-prepared. The root MIT license does not grant rights to the upstream AgentCash
-material. AgentCash names, services, and trademarks remain the property of
-their respective owners.
+- `pdf`
+- `weekly-review-planning`
+- `xlsx`
 
-## Hermes global skill snapshot
+The `pdf` and `xlsx` supporting scripts, references, and tests correspond to
+that revision; their `SKILL.md` files are portability and safety adaptations.
+The `weekly-review-planning` workflow is also adapted for this repository.
+OpenAI interface metadata is local to this repository.
 
-The inspection PR imports the 81 non-overlapping global skill directories from the sanitized Hermes snapshot at `/opt/data/artifacts/hermes-github-backup-current`, preserving each skill's source files and adding repository-required OpenAI interface metadata. Platform-specific/profile-only/duplicate/runtime material is excluded.
+MIT License
 
-## Hermes global skill snapshot
+Copyright (c) 2025 Nous Research
+Copyright (c) 2026 Nous Research
 
-This inspection PR imports 81 non-overlapping global skill directories from the sanitized Hermes snapshot at `/opt/data/artifacts/hermes-github-backup-current`. Each imported directory preserves its source files and adds repository-required OpenAI interface metadata. Profile-only, duplicate, runtime, secret-bearing, and nonportable candidates are excluded.
+The 2025 notice is from the cited repository root license and applies to
+`weekly-review-planning`. The 2026 notice is preserved from the `pdf` and
+`xlsx` per-skill license files at the cited revision.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

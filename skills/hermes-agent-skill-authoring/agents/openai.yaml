@@ -1,4 +1,0 @@
-interface:
-  display_name: "Hermes Agent Skill Authoring"
-  short_description: "Author in-repo SKILL.md files: frontmatter and structure."
-  default_prompt: "Use $hermes-agent-skill-authoring to hermes-agent-skill-authoring."

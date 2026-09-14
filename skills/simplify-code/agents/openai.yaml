@@ -1,4 +1,0 @@
-interface:
-  display_name: "Simplify Code"
-  short_description: "Parallel 4-agent cleanup of recent code changes."
-  default_prompt: "Use $simplify-code to simplify-code."

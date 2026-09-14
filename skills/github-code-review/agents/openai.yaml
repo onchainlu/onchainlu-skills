@@ -1,4 +1,0 @@
-interface:
-  display_name: "Github Code Review"
-  short_description: "Review PRs: diffs, inline comments via gh or REST."
-  default_prompt: "Use $github-code-review to github-code-review."

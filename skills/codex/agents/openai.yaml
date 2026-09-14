@@ -1,4 +1,0 @@
-interface:
-  display_name: "Codex"
-  short_description: "Delegate coding to OpenAI Codex CLI (features, PRs)."
-  default_prompt: "Use $codex to codex."

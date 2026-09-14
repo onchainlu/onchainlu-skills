@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ocr And Documents"
-  short_description: "Extract text from PDFs/scans (pymupdf, marker-pdf)."
-  default_prompt: "Use $ocr-and-documents to ocr-and-documents."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Document To Action Items"
-  short_description: "Extract cited obligations, deadlines, tasks from documents."
-  default_prompt: "Use $document-to-action-items to document-to-action-items."

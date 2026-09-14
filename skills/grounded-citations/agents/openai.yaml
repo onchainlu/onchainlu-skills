@@ -1,4 +1,0 @@
-interface:
-  display_name: "Grounded Citations"
-  short_description: "Ground answers and documents in cited, verifiable sources."
-  default_prompt: "Use $grounded-citations to grounded-citations."

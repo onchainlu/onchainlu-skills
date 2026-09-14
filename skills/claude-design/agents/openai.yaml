@@ -1,4 +1,0 @@
-interface:
-  display_name: "Claude Design"
-  short_description: "Design one-off HTML artifacts (landing, deck, prototype)."
-  default_prompt: "Use $claude-design to claude-design."

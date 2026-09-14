@@ -1,4 +1,0 @@
-interface:
-  display_name: "Xurl"
-  short_description: "X/Twitter via xurl CLI: raw post search, posting, DM, media."
-  default_prompt: "Use $xurl to xurl."
