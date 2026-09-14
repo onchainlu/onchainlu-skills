@@ -62,7 +62,7 @@ def main() -> int:
     try:
         from pypdf import PdfReader
     except ImportError:
-        print("Missing dependency: install with 'python3 -m pip install pypdf'", file=sys.stderr)
+        print("Missing dependency: see skills/pdf/SKILL.md prerequisites.", file=sys.stderr)
         return 2
     reader = PdfReader(args.pdf)
     if reader.is_encrypted:
@@ -81,7 +81,15 @@ def main() -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     files = []
     for pageno in pages:
-        img = _raster.rasterize_page(args.pdf, pageno, dpi=args.dpi, password=args.password)
+        try:
+            img = _raster.rasterize_page(
+                args.pdf, pageno, dpi=args.dpi, password=args.password
+            )
+        except _raster.RasterError as exc:
+            json.dump({"rendered": False, "error": exc.as_dict(), "files": files},
+                      sys.stdout)
+            print()
+            return 5
         if img is None:
             json.dump({"rendered": False, "missing": _raster.missing_hints()}, sys.stdout)
             print()

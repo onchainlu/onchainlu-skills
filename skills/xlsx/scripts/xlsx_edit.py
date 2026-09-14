@@ -4,10 +4,6 @@
 Operations (repeatable where noted, applied in the order listed below):
   --rename-sheet OLD:NEW        rename a sheet
   --copy-sheet SRC:NEW          duplicate a sheet under a new name
-  --insert-rows IDX[:N]         insert N rows before row IDX (default N=1)
-  --delete-rows IDX[:N]         delete N rows starting at row IDX
-  --insert-cols IDX[:N]         insert N columns before column IDX (number)
-  --delete-cols IDX[:N]         delete N columns starting at column IDX
   --set CELL=VALUE              repeatable; type-inferred (int, float, bool,
                                 ISO date, else string). '=...' sets a formula.
   --append ROWJSON              repeatable; JSON array appended as a row
@@ -28,10 +24,7 @@ Operations (repeatable where noted, applied in the order listed below):
   --recalc                      set fullCalcOnLoad so Excel/LibreOffice
                                 recomputes all formulas on next open
 
-WARNING: openpyxl does NOT shift merged-cell ranges, chart anchors, or
-formula references when rows/columns are inserted or deleted. Verify any
-sheet containing merges or formulas after structural edits — or use
-xlsx_restructure.py, which rewrites references for you.
+Use xlsx_restructure.py for all row/column insert and delete operations.
 
 Usage:
   xlsx_edit.py book.xlsx --sheet Data --set B2=42 --set C2=2026-01-01 \
@@ -73,13 +66,6 @@ def infer(text):
     return text
 
 
-def parse_idx(arg):
-    if ":" in arg:
-        idx, n = arg.split(":", 1)
-        return int(idx), int(n)
-    return int(arg), 1
-
-
 def add_table(ws, spec):
     parts = spec.split(":")
     if len(parts) < 3:
@@ -105,8 +91,7 @@ def table_append(ws, name, row_values):
 def main(argv=None):
     ap = argparse.ArgumentParser(
         description="Edit an existing .xlsx workbook.",
-        epilog="Plain insert/delete does not shift merges/formula refs — "
-               "use xlsx_restructure.py for reference-aware moves.")
+        epilog="Use xlsx_restructure.py for row/column insert and delete operations.")
     ap.add_argument("file", help="path to .xlsx file")
     ap.add_argument("--sheet", help="target sheet (default: active)")
     ap.add_argument("--out", help="output path (default: edit in place)")
@@ -114,14 +99,6 @@ def main(argv=None):
                     metavar="OLD:NEW")
     ap.add_argument("--copy-sheet", action="append", default=[],
                     metavar="SRC:NEW")
-    ap.add_argument("--insert-rows", action="append", default=[],
-                    metavar="IDX[:N]")
-    ap.add_argument("--delete-rows", action="append", default=[],
-                    metavar="IDX[:N]")
-    ap.add_argument("--insert-cols", action="append", default=[],
-                    metavar="IDX[:N]")
-    ap.add_argument("--delete-cols", action="append", default=[],
-                    metavar="IDX[:N]")
     ap.add_argument("--set", action="append", default=[], metavar="CELL=VALUE")
     ap.add_argument("--append", action="append", default=[], metavar="ROWJSON")
     ap.add_argument("--add-table", action="append", default=[],
@@ -174,22 +151,6 @@ def main(argv=None):
                          ensure_ascii=False))
         return 0
 
-    for arg in args.insert_rows:
-        idx, n = parse_idx(arg)
-        ws.insert_rows(idx, n)
-        changes.append(f"insert_rows {idx}x{n}")
-    for arg in args.delete_rows:
-        idx, n = parse_idx(arg)
-        ws.delete_rows(idx, n)
-        changes.append(f"delete_rows {idx}x{n}")
-    for arg in args.insert_cols:
-        idx, n = parse_idx(arg)
-        ws.insert_cols(idx, n)
-        changes.append(f"insert_cols {idx}x{n}")
-    for arg in args.delete_cols:
-        idx, n = parse_idx(arg)
-        ws.delete_cols(idx, n)
-        changes.append(f"delete_cols {idx}x{n}")
 
     for assignment in args.set:
         coord, raw = assignment.split("=", 1)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Create an .xlsx workbook from a JSON spec.
 
-Spec (JSON object):
+Illustrative spec shape (comments and ellipses are explanatory, not valid JSON):
   {
     "full_calc_on_load": true,          # force recalculation on open (optional)
     "defined_names": {"Rates": "'Data'!$B$2:$B$4"},   # workbook scope
@@ -22,7 +22,8 @@ Spec (JSON object):
         ],
         "charts": [
           {"type": "bar", "title": "Sales", "anchor": "F2",
-           "data": "B1:B5", "categories": "A2:A5"}
+           "data": "B1:B5", "categories": "A2:A5",
+           "titles_from_data": true}
         ],
         "validations": [
           {"range": "D2:D9", "type": "list", "formula1": "\"Yes,No,Maybe\""}
@@ -72,7 +73,7 @@ from openpyxl.comments import Comment
 from openpyxl.formatting.rule import CellIsRule, ColorScaleRule
 from openpyxl.styles import (Alignment, Border, Font, PatternFill,
                              Protection, Side)
-from openpyxl.utils import column_index_from_string, range_boundaries
+from openpyxl.utils import range_boundaries
 from openpyxl.workbook.defined_name import DefinedName
 from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.worksheet.table import Table, TableStyleInfo

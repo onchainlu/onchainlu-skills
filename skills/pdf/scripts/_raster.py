@@ -9,6 +9,23 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+PDFTOPPM_TIMEOUT_SECONDS = 30
+
+
+class RasterError(RuntimeError):
+    """Safe, structured rasterizer failure suitable for CLI JSON output."""
+
+    def __init__(self, code: str, backend: str, page: int, message: str):
+        super().__init__(message)
+        self.code = code
+        self.backend = backend
+        self.page = page
+        self.message = message
+
+    def as_dict(self) -> dict:
+        return {"code": self.code, "backend": self.backend,
+                "page": self.page, "message": self.message}
+
 
 def available_backends() -> list[str]:
     """Names of usable rasterizer backends, in preference order."""
@@ -24,21 +41,26 @@ def available_backends() -> list[str]:
 
 
 def missing_hints() -> list[str]:
-    """Install hints for when no backend is available."""
+    """Dependency names for when no backend is available."""
     return [
-        "python3 -m pip install pypdfium2",
-        "poppler-utils (provides pdftoppm), e.g. apt-get install poppler-utils",
+        "pypdfium2 (preferred)",
+        "pdftoppm (from Poppler)",
     ]
 
 
 def rasterize_page(pdf_path: str, page: int, dpi: int = 150, password: str | None = None):
-    """Render one 1-based page to a PIL Image, or None if no backend works.
-
-    Raises ValueError for an out-of-range page when a backend is present.
-    """
+    """Render one 1-based page to a PIL Image, or None if no backend works."""
     for backend in available_backends():
         if backend == "pypdfium2":
-            return _via_pdfium(pdf_path, page, dpi, password)
+            try:
+                return _via_pdfium(pdf_path, page, dpi, password)
+            except RasterError:
+                raise
+            except Exception as exc:
+                raise RasterError(
+                    "backend_failed", "pypdfium2", page,
+                    "pypdfium2 failed to render the requested page",
+                ) from exc
         if backend == "pdftoppm":
             img = _via_pdftoppm(pdf_path, page, dpi, password)
             if img is not None:
@@ -66,11 +88,26 @@ def _via_pdftoppm(pdf_path: str, page: int, dpi: int, password: str | None):
         if password:
             cmd += ["-upw", password]
         cmd += [pdf_path, prefix]
-        proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
+        try:
+            proc = subprocess.run(
+                cmd, capture_output=True, text=True, encoding="utf-8",
+                timeout=PDFTOPPM_TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise RasterError(
+                "timeout", "pdftoppm", page,
+                f"pdftoppm timed out after {PDFTOPPM_TIMEOUT_SECONDS} seconds",
+            ) from exc
         if proc.returncode != 0:
-            raise ValueError(f"pdftoppm failed: {proc.stderr.strip()}")
+            raise RasterError(
+                "backend_failed", "pdftoppm", page,
+                "pdftoppm failed to render the requested page",
+            )
         produced = sorted(Path(tmp).glob("page*.png"))
         if not produced:
-            raise ValueError(f"page {page} out of range (pdftoppm produced no image)")
+            raise RasterError(
+                "no_output", "pdftoppm", page,
+                "pdftoppm produced no image for the requested page",
+            )
         with Image.open(produced[0]) as img:
             return img.convert("RGB")

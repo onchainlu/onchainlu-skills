@@ -103,7 +103,7 @@ def main() -> int:
     try:
         from pypdf import PdfReader, PdfWriter
     except ImportError:
-        print("Missing dependency: install with 'python3 -m pip install pypdf reportlab'",
+        print("Missing dependency: see skills/pdf/SKILL.md prerequisites.",
               file=sys.stderr)
         return 2
 

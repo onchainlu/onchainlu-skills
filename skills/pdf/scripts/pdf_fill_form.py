@@ -35,7 +35,7 @@ def main() -> int:
         from pypdf import PdfReader, PdfWriter
         from pypdf.generic import BooleanObject, NameObject
     except ImportError:
-        print("Missing dependency: install with 'python3 -m pip install pypdf'", file=sys.stderr)
+        print("Missing dependency: see skills/pdf/SKILL.md prerequisites.", file=sys.stderr)
         return 2
 
     with open(args.fields_json, encoding="utf-8") as fh:

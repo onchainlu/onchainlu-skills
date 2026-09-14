@@ -1,11 +1,13 @@
 """End-to-end tests for the pdf skill helper scripts. No network required."""
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import subprocess
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -16,10 +18,70 @@ def run(script: str, *args: str, expect: int = 0) -> subprocess.CompletedProcess
     env = dict(os.environ, LC_ALL="C", LANG="C", PYTHONIOENCODING="utf-8")
     proc = subprocess.run(
         [sys.executable, str(SCRIPTS / script), *args],
-        capture_output=True, text=True, encoding="utf-8", env=env,
+        capture_output=True, text=True, encoding="utf-8", env=env, timeout=60,
     )
     assert proc.returncode == expect, f"{script} {args}: rc={proc.returncode}\n{proc.stderr}"
     return proc
+
+
+def load_script(name: str):
+    path = SCRIPTS / name
+    spec = importlib.util.spec_from_file_location(path.stem, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_pdftoppm_timeout_is_bounded_and_redacted():
+    raster = load_script("_raster.py")
+    with patch.object(
+        raster.subprocess,
+        "run",
+        side_effect=subprocess.TimeoutExpired(["pdftoppm", "-upw", "secret"], 30),
+    ) as mocked:
+        with pytest.raises(raster.RasterError) as caught:
+            raster._via_pdftoppm("private.pdf", 1, 150, "secret")
+    assert mocked.call_args.kwargs["timeout"] == raster.PDFTOPPM_TIMEOUT_SECONDS
+    assert caught.value.as_dict() == {
+        "code": "timeout",
+        "backend": "pdftoppm",
+        "page": 1,
+        "message": "pdftoppm timed out after 30 seconds",
+    }
+    assert "secret" not in str(caught.value.as_dict())
+
+
+def test_overlay_returns_structured_raster_failure(tmp_path: Path):
+    layout = load_script("pdf_form_layout.py")
+    raster = load_script("_raster.py")
+    error = raster.RasterError(
+        "timeout", "pdftoppm", 1, "pdftoppm timed out after 30 seconds"
+    )
+    with patch.dict(sys.modules, {"_raster": raster}), \
+         patch.object(raster, "available_backends", return_value=["pdftoppm"]), \
+         patch.object(raster, "rasterize_page", side_effect=error):
+        result = layout.render_overlay({}, "input.pdf", 1, str(tmp_path / "out.png"))
+    assert result == {"rendered": False, "error": error.as_dict()}
+
+
+def test_pdfium_failure_is_normalized_without_path_details():
+    raster = load_script("_raster.py")
+    with patch.object(raster, "available_backends", return_value=["pypdfium2"]), \
+         patch.object(
+             raster,
+             "_via_pdfium",
+             side_effect=RuntimeError("failed while opening /private/input.pdf"),
+         ):
+        with pytest.raises(raster.RasterError) as caught:
+            raster.rasterize_page("/private/input.pdf", 2)
+    assert caught.value.as_dict() == {
+        "code": "backend_failed",
+        "backend": "pypdfium2",
+        "page": 2,
+        "message": "pypdfium2 failed to render the requested page",
+    }
+    assert "/private/input.pdf" not in str(caught.value.as_dict())
 
 
 @pytest.fixture(scope="module")
@@ -298,7 +360,7 @@ def test_form_layout_overlay(built_form: Path, workdir: Path):
             assert img.width > 100 and img.height > 100
     else:
         assert overlay["rendered"] is False
-        assert overlay["missing"]  # install hints present
+        assert overlay["missing"]  # optional dependency names present
 
 
 def test_form_layout_overlay_blank_page(workdir: Path):

@@ -25,7 +25,7 @@ def run(script, *args, expect_ok=True):
     env.pop("PYTHONIOENCODING", None)
     proc = subprocess.run(
         [sys.executable, str(SCRIPTS / script), *map(str, args)],
-        capture_output=True, text=True, env=env, encoding="utf-8")
+        capture_output=True, text=True, env=env, encoding="utf-8", timeout=60)
     if expect_ok:
         assert proc.returncode == 0, f"{script} failed: {proc.stderr}"
     return proc
@@ -162,13 +162,6 @@ def test_read_sheets_json_formulas(workbook, tmp_path):
     # openpyxl never computes: cached value absent on a fresh file
     assert entry["cached"] is None
 
-    csv_out = tmp_path / "data.csv"
-    run("xlsx_read.py", workbook, "--csv", "--sheet", "Notes",
-        "--out", csv_out)
-    text = csv_out.read_text(encoding="utf-8")
-    assert "Zürich" in text and "Фамилия" in text
-
-
 def test_csv_roundtrip_nonascii(tmp_path):
     src = tmp_path / "src.csv"
     with open(src, "w", newline="", encoding="utf-8") as fh:
@@ -191,7 +184,14 @@ def test_csv_roundtrip_nonascii(tmp_path):
     assert ws.freeze_panes == "A2"
 
     back = tmp_path / "back.csv"
-    run("xlsx_to_csv.py", xlsx, back, "--sheet", "Import")
+    result = json.loads(
+        run("xlsx_to_csv.py", xlsx, back, "--sheet", "Import").stdout)
+    assert result == {
+        "ok": True,
+        "output": str(back),
+        "sheet": "Import",
+        "rows": 3,
+    }
     with open(back, newline="", encoding="utf-8") as fh:
         rows = list(csv.reader(fh))
     assert rows[1][0] == "Zürich"
@@ -205,6 +205,11 @@ def test_csv_roundtrip_nonascii(tmp_path):
         "--encoding", "utf-8-sig")
     assert latin.read_bytes().startswith(b"\xef\xbb\xbf")
 
+    semicolon = tmp_path / "semicolon.csv"
+    run("xlsx_to_csv.py", xlsx, semicolon, "--sheet", "Import",
+        "--delimiter", ";")
+    assert ";" in semicolon.read_text(encoding="utf-8").splitlines()[0]
+
 
 def test_edit_existing(workbook, tmp_path):
     edited = tmp_path / "edited.xlsx"
@@ -217,7 +222,6 @@ def test_edit_existing(workbook, tmp_path):
                "--set", "D1=2026-12-24",
                "--set", "E1==SUM(C1:C1)",
                "--append", '["appended", 1, false]',
-               "--insert-rows", "1:1",
                "--recalc")
     result = json.loads(proc.stdout)
     assert result["ok"]
@@ -225,9 +229,6 @@ def test_edit_existing(workbook, tmp_path):
     wb = load_workbook(edited)
     assert set(wb.sheetnames) == {"Main", "Notes", "Backup"}
     ws = wb["Notes"]
-    # insert-rows ran before --set per documented order, so row 1 is blank
-    # and original data moved to row 2... check documented ordering:
-    # structural ops run before --set, so B1 etc. were written after insert.
     assert ws["B1"].value == "Änderung"
     assert ws["C1"].value == 99.5
     assert ws["D1"].value.date() == date(2026, 12, 24)
@@ -251,6 +252,15 @@ def test_help_and_errors():
               expect_ok=False)
     assert bad.returncode != 0
     assert json.loads(bad.stderr)["ok"] is False
+
+
+def test_edit_rejects_structural_operations(workbook):
+    help_text = run("xlsx_edit.py", "--help").stdout
+    for option in ("--insert-rows", "--delete-rows", "--insert-cols", "--delete-cols"):
+        assert option not in help_text
+        proc = run("xlsx_edit.py", workbook, option, "1", expect_ok=False)
+        assert proc.returncode == 2
+        assert "unrecognized arguments" in proc.stderr
 
 
 # ---------------------------------------------------------------------------
@@ -357,7 +367,8 @@ def test_restructure_insert_rows_shifts_everything(restructure_book):
     # defined name rewritten
     assert wb.defined_names["SalesRange"].attr_text == "'Data'!$B$2:$B$6"
     # report is honest about limits
-    assert "chart anchors" in report["not_shifted"]
+    assert "chart anchors and series references" in report["not_shifted"]
+    assert "image/drawing anchors" in report["not_shifted"]
     assert any(f["cell"] == "B1" and f["sheet"] == "Summary"
                for f in report["formulas"])
 

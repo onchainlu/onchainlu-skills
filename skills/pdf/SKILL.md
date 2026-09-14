@@ -25,14 +25,28 @@ Create PDFs from structured specs, build and fill AcroForm forms (with layout li
 
 ## Prerequisites
 
-- Python 3.10+ with `pypdf`, `reportlab`, `pdfplumber`:
-  `python -m pip install pypdf reportlab pdfplumber`
-- Optional, for page rasterization (`pdf_page_image.py`, overlay rendering): `python -m pip install pypdfium2`, or poppler's `pdftoppm` on PATH. Scripts fall back pypdfium2 → pdftoppm and report `{"rendered": false, "missing": [...]}` (exit 0) when neither exists.
-- Each helper script checks imports lazily and prints an install hint if a dependency is missing.
+- Python 3.10+ with `pypdf[crypto]`, `reportlab`, `pdfplumber`, and `Pillow`.
+- Optional, for page rasterization (`pdf_page_image.py`, overlay rendering):
+  `pypdfium2` (preferred), or Poppler's `pdftoppm` on PATH. Scripts fall back
+  from pypdfium2 to pdftoppm.
+- From the repository root, the pinned, hash-checked functional-test setup is
+  documented in [README.md](../../README.md). Helper dependency errors point
+  back to this prerequisite list instead of prescribing package-manager commands.
+
+### Optional render contract
+
+- A completed requested render exits 0 with `{"rendered": true, ...}`.
+- If neither optional rasterizer is available, the command exits 0 with
+  `{"rendered": false, "missing": [...]}` so callers can choose another path.
+- If an available backend fails, or `pdftoppm` exceeds its 30-second per-page timeout, the
+  command exits 5 with `{"rendered": false, "error": {"code": ..., "backend":
+  ..., "page": ..., "message": ...}}`. Completed page files, if any, are listed.
+  For form-layout overlays, layout errors retain exit 1 even when the optional
+  overlay also reports a render failure.
 
 ## How to Run
 
-All helpers live in `scripts/` and are argparse CLIs — run them with the `terminal` tool; every one supports `--help`. They read/write JSON strictly as UTF-8, print JSON results to stdout, and exit non-zero on failure.
+All helpers live in `scripts/` and are argparse CLIs — run them with the `terminal` tool; every one supports `--help`. They read/write JSON strictly as UTF-8 and print JSON results to stdout. Required-operation failures exit non-zero; optional rasterizer absence follows the render contract above.
 
 ```bash
 python scripts/pdf_create.py spec.json -o out.pdf         # build PDF from JSON spec

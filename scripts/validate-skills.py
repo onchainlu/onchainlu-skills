@@ -179,6 +179,11 @@ def markdown_local_targets(text: str) -> list[str]:
     return targets
 
 
+def decode_markdown_escapes(value: str) -> str:
+    """Decode Markdown backslash escapes for ASCII punctuation only."""
+    return re.sub(r"\\([!\"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~])", r"\1", value)
+
+
 def validate_local_links(path: Path, errors: list[str]) -> None:
     text = path.read_text(encoding="utf-8")
     for raw_target in markdown_local_targets(text):
@@ -187,7 +192,7 @@ def validate_local_links(path: Path, errors: list[str]) -> None:
             continue
         if target in {"...", "…"}:
             continue
-        resolved = (path.parent / unquote(target)).resolve()
+        resolved = (path.parent / unquote(decode_markdown_escapes(target))).resolve()
         try:
             resolved.relative_to(ROOT)
         except ValueError:

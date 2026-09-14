@@ -69,9 +69,11 @@ Per field, on its declared page:
   fields of an overlapping cluster are flagged);
 - a label must sit within 150 pt of its entry box and must not overlap it.
 
-Exit code 0 = clean, 1 = at least one problem; the JSON report lists
-per-field `problems`. Lint the spec BEFORE building — fixing numbers in
-JSON is cheaper than debugging a rendered PDF.
+Exit code 0 = clean, 1 = at least one layout problem; the JSON report lists
+per-field `problems`. A requested overlay also follows the PDF skill's optional
+render contract: unavailable rasterizers are reported without changing a clean
+lint result, while an available backend failure exits 5. Lint the spec BEFORE
+building — fixing numbers in JSON is cheaper than debugging a rendered PDF.
 
 ## Visual review loop
 
@@ -83,7 +85,7 @@ Red rectangles = entry boxes (with field names), blue = label boxes.
 Without `--pdf` the overlay is drawn on a blank page (PIL-only, always
 works); with `--pdf` the real page is rasterized underneath
 (needs pypdfium2 or pdftoppm — otherwise the report says
-`"rendered": false` with install hints). Feed the PNG to `vision_analyze`
+`"rendered": false` with dependency names). Feed the PNG to `vision_analyze`
 and ask specifically about collisions, alignment, and stray labels.
 
 ## Radio-group quirks (reportlab + pypdf)

@@ -46,10 +46,10 @@ is removed (merges/validations).
 
 ## What it CANNOT shift (honest limits)
 
-- **Chart anchors and plotted ranges** — openpyxl chart objects are not
-  reliably round-tripped; anchors stay where they were. Re-create
-  charts after restructuring if their data moved.
-- **Images / drawings** — same reason.
+- **Chart anchors and plotted ranges** — anchors and chart-series references
+  are not rewritten. Re-anchor or update charts after restructuring if their
+  position or data moved.
+- **Images / drawings** — drawing anchors are not moved.
 - **Conditional-format RULE formulas** — the applied range (sqref) is
   shifted, but formulas inside `cell_is`/`expression` rules (e.g.
   `$B1>100`) are left as-is. Review them if they reference moved cells.

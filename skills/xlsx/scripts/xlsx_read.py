@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Read an .xlsx workbook: inventory, JSON/CSV dumps, formula listing.
+"""Read an .xlsx workbook: inventory, JSON dumps, and formula listing.
 
 Modes (pick one):
   --sheets     JSON inventory: sheet names, dimensions, row/col counts
   --json       dump one sheet's rows as a JSON array of arrays
-  --csv        dump one sheet as CSV to stdout or --out
   --formulas   JSON list of formula cells {"cell", "formula", "cached"}
   --notes      JSON list of cell notes/comments across sheets
   --names      JSON map of workbook defined names
@@ -14,13 +13,10 @@ Options:
   --data-only      load cached formula RESULTS instead of formula strings.
                    Caveat: openpyxl never computes formulas; cached values
                    exist only if the file was last saved by Excel/LibreOffice.
-  --encoding ENC   encoding for --csv --out files (default utf-8)
-  --out PATH       write --csv output to a file instead of stdout
 
 Usage:
   xlsx_read.py book.xlsx --sheets
   xlsx_read.py book.xlsx --json --sheet Data
-  xlsx_read.py book.xlsx --csv --sheet Data --out data.csv
   xlsx_read.py book.xlsx --formulas
   xlsx_read.py book.xlsx --notes
   xlsx_read.py book.xlsx --names
@@ -28,7 +24,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 import sys
 from datetime import date, datetime, time
@@ -109,15 +104,12 @@ def main(argv=None):
     mode = ap.add_mutually_exclusive_group(required=True)
     mode.add_argument("--sheets", action="store_true")
     mode.add_argument("--json", action="store_true")
-    mode.add_argument("--csv", action="store_true")
     mode.add_argument("--formulas", action="store_true")
     mode.add_argument("--notes", action="store_true")
     mode.add_argument("--names", action="store_true")
     ap.add_argument("--sheet", help="sheet name (default: active)")
     ap.add_argument("--data-only", action="store_true",
                     help="return cached formula results (see module docstring)")
-    ap.add_argument("--encoding", default="utf-8")
-    ap.add_argument("--out", help="output file for --csv")
     args = ap.parse_args(argv)
 
     if args.formulas:
@@ -136,19 +128,9 @@ def main(argv=None):
         return 0
 
     ws = wb[args.sheet] if args.sheet else wb.active
+    assert ws is not None
     rows = sheet_rows(ws)
-    if args.json:
-        print(json.dumps({"sheet": ws.title, "rows": rows}, ensure_ascii=False))
-    else:  # --csv
-        if args.out:
-            with open(args.out, "w", newline="", encoding=args.encoding) as fh:
-                csv.writer(fh).writerows(
-                    [["" if v is None else v for v in r] for r in rows])
-            print(json.dumps({"ok": True, "out": args.out, "rows": len(rows)}))
-        else:
-            w = csv.writer(sys.stdout)
-            for r in rows:
-                w.writerow(["" if v is None else v for v in r])
+    print(json.dumps({"sheet": ws.title, "rows": rows}, ensure_ascii=False))
     return 0
 
 

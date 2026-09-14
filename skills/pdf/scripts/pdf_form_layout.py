@@ -108,7 +108,10 @@ def render_overlay(spec: dict, pdf_path: str | None, page: int, out_png: str,
     from PIL import Image, ImageDraw
     width, height = _page_size(spec)
     if pdf_path:
-        img = _raster.rasterize_page(pdf_path, page, dpi=dpi)
+        try:
+            img = _raster.rasterize_page(pdf_path, page, dpi=dpi)
+        except _raster.RasterError as exc:
+            return {"rendered": False, "error": exc.as_dict()}
         if img is None:
             return {"rendered": False, "missing": _raster.missing_hints()}
         scale = img.width / width
@@ -161,7 +164,11 @@ def main() -> int:
                                            args.render_overlay, args.dpi)
     json.dump(result, sys.stdout, ensure_ascii=False, indent=2)
     print()
-    return 0 if result["ok"] else 1
+    if not result["ok"]:
+        return 1
+    if args.render_overlay and not result["overlay"]["rendered"]:
+        return 5 if "error" in result["overlay"] else 0
+    return 0
 
 
 if __name__ == "__main__":

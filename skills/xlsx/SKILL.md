@@ -22,7 +22,7 @@ scripts are argparse CLIs that print JSON and use explicit UTF-8 I/O.
   merged cells, freeze panes, autofilter, conditional formatting,
   charts, data-validation dropdowns, native Excel tables, defined
   names, hyperlinks, cell notes, sheet protection.
-- Reading a workbook: sheet inventory, dumping data as JSON or CSV,
+- Reading a workbook: sheet inventory, dumping data as JSON,
   listing formulas vs cached values, notes, defined names, tables.
 - Editing existing files: set cells, append rows, insert/delete
   rows/columns (reference-aware via `xlsx_restructure.py`),
@@ -42,8 +42,8 @@ scripts are argparse CLIs that print JSON and use explicit UTF-8 I/O.
 
 ## How to Run
 
-Run the helper scripts with the `terminal` tool from this skill's
-`scripts/` directory (every script supports `--help`):
+Run the helper scripts with the `terminal` tool from this skill's directory
+(every script supports `--help`):
 
 ```bash
 python scripts/xlsx_create.py spec.json report.xlsx   # build from JSON spec
@@ -67,11 +67,10 @@ Author the JSON spec with `write_file`, inspect script JSON output with
 | Create workbook from spec | `xlsx_create.py spec.json out.xlsx` |
 | Sheet names + dimensions | `xlsx_read.py f.xlsx --sheets` |
 | Dump sheet as JSON | `xlsx_read.py f.xlsx --json --sheet S` |
-| Dump sheet as CSV | `xlsx_read.py f.xlsx --csv --out d.csv` |
+| Dump sheet as CSV | `xlsx_to_csv.py f.xlsx d.csv --sheet S` |
 | List formulas + cached values | `xlsx_read.py f.xlsx --formulas` |
 | Set a cell / formula | `xlsx_edit.py f.xlsx --set "A1==SUM(B:B)"` |
 | Append a row | `xlsx_edit.py f.xlsx --append '[1,"x",true]'` |
-| Insert 2 rows, refs NOT shifted | `xlsx_edit.py f.xlsx --insert-rows 3:2` |
 | Insert 2 rows, refs shifted | `xlsx_restructure.py f.xlsx --insert-rows 3:2` |
 | Delete a column, refs shifted | `xlsx_restructure.py f.xlsx --delete-cols B` |
 | Create a native table | `xlsx_edit.py f.xlsx --add-table Sales:A1:C9` |
@@ -89,8 +88,8 @@ Author the JSON spec with `write_file`, inspect script JSON output with
 
 ## Procedure
 
-1. **Create**: write a JSON spec (schema documented in
-   `xlsx_create.py --help` and its docstring). Each sheet supports
+1. **Create**: write a JSON spec (the supported shape is documented in the
+   `xlsx_create.py` module docstring). Each sheet supports
    `rows` (scalars or styled cell objects), sparse `cells` overrides,
    `column_widths`, `row_heights`, `merges`, `freeze_panes`,
    `autofilter`, `conditional_formats` (cell_is rules and color
@@ -109,7 +108,7 @@ Author the JSON spec with `write_file`, inspect script JSON output with
    everything on open. openpyxl itself NEVER evaluates formulas.
 3. **Read**: `--sheets` for inventory (names, dimensions, merged
    ranges, chart count, tables, protection, defined names),
-   `--json`/`--csv` for data, `--formulas` to
+   `--json` for data, `--formulas` to
    pair each formula string with its cached result, `--notes` for
    cell comments, `--names` for defined names. Cached results
    exist only if the file was last saved by a real spreadsheet app;
@@ -118,17 +117,16 @@ Author the JSON spec with `write_file`, inspect script JSON output with
    LibreOffice; prints `{"recalculated": false, ...}` and exits 0
    when `soffice` is absent), then reload with `--data-only`.
 4. **Edit**: `xlsx_edit.py` applies renames/copies first, then
-   structural row/column changes, then `--set`/`--append`. It edits in
+   `--set`/`--append`. It edits in
    place unless `--out` is given. For an existing workbook, use `--out`
    unless the user explicitly approves replacing the original.
-5. **Restructure**: for insert/delete on sheets that have formulas,
-   merges, tables, or filters, use `xlsx_restructure.py` instead of
-   `xlsx_edit.py`. It rewrites formula references on ALL sheets
+5. **Restructure**: use `xlsx_restructure.py` for every row/column insert or
+   delete. It rewrites formula references on ALL sheets
    (absolute `$` refs, ranges, cross-sheet refs), shifts merges,
    autofilter, freeze panes, validation and conditional-format
    ranges, table refs, defined names, and row/column dimensions, then
    prints a JSON report including a `not_shifted` list. Rules and
-   limits: `references/restructuring.md`.
+   limits: [restructuring reference](references/restructuring.md).
 6. **CSV interop**: `csv_to_xlsx.py` infers int/float/bool/ISO-date
    per cell and styles the header row; `xlsx_to_csv.py` writes ISO
    dates and blank strings for empty cells. Both default to UTF-8 and
@@ -154,9 +152,8 @@ LibreOffice or hand the file to the user unconverted.
 - **openpyxl does not calculate.** Formula results are available only
   via `load_workbook(path, data_only=True)` and only when the file was
   previously saved by Excel/LibreOffice. Otherwise you get `None`.
-- **`xlsx_edit.py` insert/delete does not shift references** (raw
-  openpyxl behavior). Use `xlsx_restructure.py`, which does — but even
-  it cannot move chart anchors, images, or conditional-format RULE
+- **Structural edits require `xlsx_restructure.py`.** It cannot move chart
+  anchors or chart-series references, image/drawing anchors, or conditional-format RULE
   formulas; read its JSON report's `not_shifted` list and
   `references/restructuring.md`.
 - **Sheet protection is NOT security.** `--protect` sets the standard
@@ -170,9 +167,10 @@ LibreOffice or hand the file to the user unconverted.
 - **`data_only=True` then save** silently discards all formulas
   (cached values replace them). Never save a workbook loaded that way
   unless that is the goal.
-- **Loading strips charts/images**: openpyxl does not round-trip
-  charts, so editing a charted workbook and saving drops the charts.
-  Re-add charts after editing, or avoid re-saving charted files.
+- **Drawing limits**: supported charts and images can round-trip through
+  openpyxl, but restructuring does not update their anchors or chart-series
+  ranges; unsupported drawing extensions may still be lost. Verify drawings
+  and plotted ranges after editing a workbook that contains them.
 - **CSV locale traps**: always pass explicit encodings (the scripts
   already do) and remember European CSVs often use `;` delimiters and
   decimal commas — use `--delimiter ';'` and expect strings like

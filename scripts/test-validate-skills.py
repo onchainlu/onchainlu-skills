@@ -60,6 +60,25 @@ class MarkdownLinkTests(unittest.TestCase):
                 VALIDATOR.validate_local_links(page, errors)
             self.assertEqual(errors, [])
 
+    def test_markdown_escaped_punctuation_in_links_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            page = root / "docs" / "index.md"
+            page.parent.mkdir(parents=True)
+            (page.parent / "file_(v1).md").write_text("ok\n", encoding="utf-8")
+            page.write_text(
+                "[inline](file_\\(v1\\).md)\n"
+                "[reference][target]\n[target]: file_\\(v1\\).md\n",
+                encoding="utf-8",
+            )
+            errors: list[str] = []
+            with patch.object(VALIDATOR, "ROOT", root):
+                VALIDATOR.validate_local_links(page, errors)
+            self.assertEqual(errors, [])
+
+    def test_non_punctuation_backslash_is_preserved(self) -> None:
+        self.assertEqual(VALIDATOR.decode_markdown_escapes(r"file\a.md"), r"file\a.md")
+
     def test_link_escape_fails_even_when_target_exists(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "repo"

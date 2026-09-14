@@ -1,4 +1,4 @@
 interface:
   display_name: "Xlsx"
   short_description: "Create, read, edit Excel .xlsx workbooks and CSVs."
-  default_prompt: "Use $xlsx to xlsx."
+  default_prompt: "Use $xlsx to create, inspect, edit, or convert this spreadsheet and verify the result."

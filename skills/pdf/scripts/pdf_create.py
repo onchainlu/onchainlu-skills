@@ -47,7 +47,7 @@ def build_pdf(spec: dict, out_path: str) -> int:
             TableStyle,
         )
     except ImportError:
-        print("Missing dependency: install with 'python3 -m pip install reportlab'", file=sys.stderr)
+        print("Missing dependency: see skills/pdf/SKILL.md prerequisites.", file=sys.stderr)
         return 2
 
     page_size = letter if str(spec.get("page_size", "A4")).lower() == "letter" else A4

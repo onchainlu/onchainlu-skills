@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Reference-aware row/column insert and delete for .xlsx workbooks.
 
-Unlike plain openpyxl insert_rows/delete_cols (and xlsx_edit.py's thin
-wrappers), this script also rewrites everything that points at the moved
-cells:
+Unlike plain openpyxl insert_rows/delete_cols, this script also rewrites
+everything that points at the moved cells:
 
   * formula references in ALL sheets, including absolute refs ($B$2),
     ranges (B2:B9), and cross-sheet refs ('My Sheet'!A1 / Data!$B$8).
@@ -17,8 +16,9 @@ cells:
   * row heights / column widths
 
 It prints a JSON report of every rewrite it made and lists what it
-could NOT shift (chart anchors, images, conditional-format RULE
-formulas). Full rules and limits: references/restructuring.md.
+could NOT shift (chart anchors and series references, image/drawing
+anchors, conditional-format RULE formulas). Full rules and limits:
+the xlsx skill's restructuring reference.
 
 One structural operation per invocation:
 
@@ -193,8 +193,9 @@ def main(argv=None):
         description="Insert/delete rows or columns AND rewrite formula "
                     "references, merges, filters, validations, tables, and "
                     "defined names to match.",
-        epilog="Cannot shift: chart anchors, images, conditional-format "
-               "rule formulas. See references/restructuring.md.")
+        epilog="Cannot shift: chart anchors and series references, image/drawing "
+               "anchors, conditional-format rule formulas. See the xlsx skill's "
+               "restructuring reference.")
     ap.add_argument("file", help="path to .xlsx file")
     ap.add_argument("--sheet", help="target sheet (default: active)")
     ap.add_argument("--out", help="output path (default: edit in place)")
@@ -224,7 +225,8 @@ def main(argv=None):
               "op": "delete" if delete else "insert", "index": idx, "count": n,
               "formulas": [], "merges": [], "tables": {}, "defined_names": {},
               "validations": [], "conditional_formats": [],
-              "not_shifted": ["chart anchors", "images",
+              "not_shifted": ["chart anchors and series references",
+                              "image/drawing anchors",
                               "conditional-format rule formulas"]}
 
     # 1. capture merge ranges (openpyxl does not move them), then unmerge

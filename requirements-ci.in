@@ -1,0 +1,7 @@
+pytest==9.1.1
+pypdf[crypto]==6.18.1
+reportlab==5.0.1
+pdfplumber==0.11.10
+Pillow==12.3.0
+pypdfium2==5.13.0
+openpyxl==3.1.5
