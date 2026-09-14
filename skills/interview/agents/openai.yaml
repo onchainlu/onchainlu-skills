@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interview"
+  short_description: "Turn an idea into an execution-ready plan"
+  default_prompt: "Use $interview to question me one step at a time and produce an execution-ready implementation plan."
