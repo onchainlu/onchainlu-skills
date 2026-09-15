@@ -71,9 +71,15 @@ Run the complete repository check before publishing:
 ./scripts/validate-all.sh
 ```
 
+The validation command creates a temporary virtual environment outside the
+checkout, installs the hash-locked dependencies from `requirements-ci.txt`, and
+removes the environment on exit. Dependency installation and downloads use
+finite timeouts and retries; failures stop validation with a nonzero status.
+
 The check validates skill frontmatter, OpenAI metadata, local references,
 shell scripts, trigger ownership, secret patterns, and public-repository path
-boundaries. GitHub Actions runs the same command on pushes and pull requests.
+boundaries, then runs the PDF and XLSX functional suites. GitHub Actions invokes
+the same self-contained validation command on pushes and pull requests.
 
 ## License and provenance
 

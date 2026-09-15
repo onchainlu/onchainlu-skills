@@ -35,9 +35,33 @@ The following skill directories were adapted from that repository:
 
 The `smells` skill also incorporates part of the upstream `clean` workflow.
 
-MIT License
-
 Copyright (c) 2026 Brooklyn Nicholson
+
+## Nous Research Hermes Agent
+
+The following skill directories are adapted from
+[NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) at
+revision `4d9202b9633fa8e5d8e47b8cb9e07ff3cd92636b`:
+
+- `pdf`
+- `weekly-review-planning`
+- `xlsx`
+
+The `pdf` and `xlsx` supporting scripts, references, and tests originated at
+that revision and have subsequent portability, safety, and test adaptations in
+this repository. The `weekly-review-planning` workflow is also adapted here.
+OpenAI interface metadata is local to this repository.
+
+Copyright (c) 2025 Nous Research
+Copyright (c) 2026 Nous Research
+
+The 2025 notice is from the cited repository root license and applies to
+`weekly-review-planning`. The 2026 notice is preserved from the `pdf` and
+`xlsx` per-skill license files at the cited revision.
+
+## Shared MIT license text
+
+The following MIT terms apply to both upstream notices above.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -56,15 +80,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-## AgentCash
-
-`skills/agentcash/SKILL.md` comes from
-[Merit-Systems/agentcash-skills](https://github.com/Merit-Systems/agentcash-skills)
-and matches the published skill identified at revision
-`522d5da81af61e955e228d8dbb0499e0fb85171a`.
-
-The upstream repository did not declare a license when this notice was
-prepared. The root MIT license does not grant rights to the upstream AgentCash
-material. AgentCash names, services, and trademarks remain the property of
-their respective owners.

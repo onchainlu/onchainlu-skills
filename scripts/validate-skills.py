@@ -6,6 +6,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from urllib.parse import unquote
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -32,7 +33,14 @@ TRIGGER_OWNERS = {
     "$smells": "smells",
     "/smells": "smells",
 }
-TEXT_SUFFIXES = {".md", ".sh", ".yaml", ".yml"}
+FORBIDDEN_STATE_NAMES = {
+    ".env",
+    ".git-credentials",
+    "credentials.json",
+    "session.json",
+    "token.json",
+    "wallet.json",
+}
 
 
 def fail(errors: list[str], path: Path, message: str) -> None:
@@ -121,30 +129,96 @@ def validate_openai_yaml(
         fail(errors, path, f"default_prompt must mention ${skill_name}")
 
 
+def markdown_local_targets(text: str) -> list[str]:
+    """Return inline and reference-definition Markdown destinations."""
+    targets: list[str] = []
+    cursor = 0
+    while True:
+        start = text.find("](", cursor)
+        if start < 0:
+            break
+        index = start + 2
+        while index < len(text) and text[index].isspace():
+            index += 1
+        if index < len(text) and text[index] == "<":
+            end = text.find(">", index + 1)
+            if end >= 0:
+                targets.append(text[index : end + 1])
+                cursor = end + 1
+                continue
+        destination: list[str] = []
+        depth = 0
+        escaped = False
+        while index < len(text):
+            char = text[index]
+            if escaped:
+                destination.append(char)
+                escaped = False
+            elif char == "\\":
+                destination.append(char)
+                escaped = True
+            elif char == "(":
+                depth += 1
+                destination.append(char)
+            elif char == ")":
+                if depth == 0:
+                    break
+                depth -= 1
+                destination.append(char)
+            elif char.isspace() and depth == 0:
+                break
+            else:
+                destination.append(char)
+            index += 1
+        if destination:
+            targets.append("".join(destination))
+        cursor = max(index + 1, start + 2)
+    targets.extend(
+        re.findall(r"^\s{0,3}\[[^\]]+\]:\s*(<[^>]+>|\S+)", text, re.MULTILINE)
+    )
+    return targets
+
+
+def decode_markdown_escapes(value: str) -> str:
+    """Decode Markdown backslash escapes for ASCII punctuation only."""
+    return re.sub(r"\\([!\"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~])", r"\1", value)
+
+
 def validate_local_links(path: Path, errors: list[str]) -> None:
     text = path.read_text(encoding="utf-8")
-    for raw_target in re.findall(r"\[[^\]]*\]\(([^)]+)\)", text):
-        target = raw_target.strip().split("#", 1)[0]
+    for raw_target in markdown_local_targets(text):
+        target = raw_target.strip().strip("<>").split("#", 1)[0].split("?", 1)[0]
         if not target or re.match(r"^[a-z][a-z0-9+.-]*:", target, re.IGNORECASE):
             continue
-        target = target.strip("<>")
         if target in {"...", "…"}:
             continue
-        if not (path.parent / target).resolve().exists():
+        resolved = (path.parent / unquote(decode_markdown_escapes(target))).resolve()
+        try:
+            resolved.relative_to(ROOT)
+        except ValueError:
+            fail(errors, path, f"local link escapes repository: {raw_target}")
+            continue
+        if not resolved.exists():
             fail(errors, path, f"missing local link target: {raw_target}")
+
+
+def markdown_files(root: Path) -> list[Path]:
+    return sorted(path for path in root.rglob("*.md") if ".git" not in path.parts)
 
 
 def validate_public_content(errors: list[str]) -> None:
     forbidden_paths = (
         "/" + "Users/",
         "/" + "Users/Shared/",
+        "/" + "opt/data/",
+        "C:" + "\\Users\\",
         "hermes-enterprise-kit-" + "pilot-customer",
         "codex:" + "//threads/",
     )
     stale_phrases = (
-        "Private source of truth",
-        "private tap",
-        "repository is private",
+        "Private source " + "of truth",
+        "private " + "tap",
+        "repository is " + "private",
     )
     secret_patterns = {
         "AWS access key": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
@@ -152,23 +226,33 @@ def validate_public_content(errors: list[str]) -> None:
         "OpenAI-style secret": re.compile(r"\bsk-[A-Za-z0-9]{20,}\b"),
         "private key": re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"),
         "Slack token": re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{20,}\b"),
+        "JWT": re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b"),
         "authenticated URL": re.compile(r"https?://[^\s/:]+:[^\s@]+@"),
     }
+    machine_path_patterns = {
+        "Linux user home": re.compile(r"(?<![A-Za-z0-9_])/home/[A-Za-z0-9._-]+/"),
+    }
 
-    paths = [ROOT / "README.md", ROOT / "AGENTS.md", ROOT / "CLAUDE.md"]
-    paths.extend(SKILLS_DIR.rglob("*"))
-    paths.extend([ROOT / "scripts" / "bootstrap-local.sh", ROOT / "scripts" / "bootstrap-hermes-cloud.sh"])
+    paths = [path for path in ROOT.rglob("*") if ".git" not in path.parts]
 
     for path in paths:
-        if not path.is_file() or path.suffix not in TEXT_SUFFIXES:
+        if not path.is_file():
             continue
-        text = path.read_text(encoding="utf-8")
+        if path.name in FORBIDDEN_STATE_NAMES or path.name.startswith(".env."):
+            fail(errors, path, "committed secret or runtime-state filename")
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
         for value in forbidden_paths:
             if value in text:
                 fail(errors, path, f"contains private or machine-specific path marker: {value}")
         for phrase in stale_phrases:
             if phrase in text:
                 fail(errors, path, f"contains stale public-repository wording: {phrase}")
+        for label, pattern in machine_path_patterns.items():
+            if pattern.search(text):
+                fail(errors, path, f"contains machine-specific {label}")
         for label, pattern in secret_patterns.items():
             if pattern.search(text):
                 fail(errors, path, f"contains possible {label}")
@@ -192,7 +276,7 @@ def main() -> int:
         if name:
             descriptions[name] = description
             validate_openai_yaml(skill_dir, name, errors)
-        validate_local_links(skill_md, errors)
+
 
     for owner_trigger, owner in TRIGGER_OWNERS.items():
         for skill_name, description in descriptions.items():
@@ -215,7 +299,7 @@ def main() -> int:
         if requirement not in visual_text:
             errors.append(f"skills/visual-verify/SKILL.md: missing visual check: {requirement}")
 
-    for path in (ROOT / "README.md", ROOT / "THIRD_PARTY_NOTICES.md"):
+    for path in markdown_files(ROOT):
         validate_local_links(path, errors)
     validate_public_content(errors)
 
