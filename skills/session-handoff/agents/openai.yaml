@@ -1,0 +1,4 @@
+interface:
+  display_name: "Session Handoff"
+  short_description: "Capture concise context for the next session"
+  default_prompt: "Use $session-handoff to create a durable resume note for this work."
